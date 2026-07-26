@@ -225,6 +225,29 @@ div[data-testid="stMetricValue"] {
   margin: 2px 0 8px;
 }
 
+.ra-status-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  background: var(--ra-line);
+  margin-bottom: 14px;
+}
+
+.ra-status-strip div {
+  background: #ffffff;
+  color: var(--ra-muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+  padding: 11px 12px;
+}
+
+.ra-status-strip strong {
+  color: var(--ra-ink);
+}
+
 div[data-testid="stExpander"] {
   border: 1px solid var(--ra-line);
   border-radius: 8px;
