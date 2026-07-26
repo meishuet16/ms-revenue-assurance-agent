@@ -70,7 +70,21 @@ Offline fixture mode:
 streamlit run app/app.py
 ```
 
+Windows helper:
+
+```powershell
+scripts\run_dashboard.ps1
+```
+
+Unix helper:
+
+```bash
+bash scripts/run_dashboard.sh
+```
+
 Snowflake-backed mode is used automatically when Snowflake credentials are available.
+
+The offline dashboard has been browser-checked locally at `http://localhost:8501`. It displays Summary, Case Queue, and Evidence Trail tabs from deterministic synthetic fixtures.
 
 ## Expected Q3 Summary
 
@@ -83,4 +97,3 @@ Snowflake-backed mode is used automatically when Snowflake credentials are avail
 ## Safety Boundary
 
 The system prepares finance review cases only. It never creates invoices, updates ledgers, sends customer notifications, triggers payments, or changes balances.
-
