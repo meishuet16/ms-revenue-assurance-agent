@@ -19,6 +19,15 @@ def render() -> None:
         selected = st.selectbox("Focused case", cases, format_func=lambda case: f"{case.customer_name} - {case.status}")
         render_case_detail(selected)
         st.subheader("Review Action")
+        st.markdown(
+            """
+            <div class="ra-safety-panel">
+              Review actions only update investigation review state. They do not create invoices,
+              send emails, update ledgers, trigger payments, or change customer balances.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         reviewed_by = st.text_input("Reviewer", value="finance.reviewer@example.com")
         comment = st.text_area("Review comment", value="Offline review note.")
         cols = st.columns(3)

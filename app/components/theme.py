@@ -337,6 +337,17 @@ div[data-testid="stMetricValue"] {
   line-height: 1.4;
   margin-top: 8px;
 }
+
+.ra-safety-panel {
+  background: var(--ra-blue-bg);
+  color: #1849a9;
+  border: 1px solid #b2ddff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
 </style>
 """
 
