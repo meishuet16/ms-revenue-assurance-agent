@@ -15,7 +15,7 @@ def build_evidence_timeline_html(case) -> str:
             f'<div class="ra-timeline-item__type">{escape(item.evidence_type.replace("_", " ").title())}</div>'
             f'<div class="ra-timeline-item__id">{escape(item.evidence_id)}</div>'
             f'<div class="ra-timeline-item__excerpt">{escape(item.evidence_excerpt)}</div>'
-            f'<div class="ra-timeline-item__source">Source tool: {escape(item.source_tool)}</div>'
+            f'<div class="ra-timeline-item__source"><span>Source tool</span>{escape(item.source_tool)}</div>'
             "</div>"
             "</div>"
         )
