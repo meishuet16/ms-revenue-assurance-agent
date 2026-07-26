@@ -36,5 +36,24 @@ Show the three skills:
 streamlit run app/app.py
 ```
 
-Open Summary, Case Queue, and Evidence Trail. Use Accept finding, Dismiss, and Assign to data team. Explain that no actual financial action is triggered.
+Open Summary, Case Queue, and Evidence Trail.
 
+In Summary:
+
+- point to the executive metric row;
+- show the Q3 2026 decision branch cards;
+- explain that suspected leakage, explained variance, evidence conflict, and data quality remain separate categories.
+
+In Case Queue:
+
+- select Nova Retail;
+- point to the focused case detail panel;
+- show the review action safety panel;
+- use Accept finding, Dismiss, and Assign.
+
+In Evidence Trail:
+
+- show the audit timeline;
+- point to pricing terms, invoice lines, approval documents, classification, and recommended human action.
+
+Explain that no actual financial action is triggered.
