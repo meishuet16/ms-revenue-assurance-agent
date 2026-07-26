@@ -86,6 +86,12 @@ Snowflake-backed mode is used automatically when Snowflake credentials are avail
 
 The offline dashboard has been browser-checked locally at `http://localhost:8501`. It displays Summary, Case Queue, and Evidence Trail tabs from deterministic synthetic fixtures.
 
+Dashboard views:
+
+- Summary: executive metric row and Q3 decision branch cards.
+- Case Queue: queue table, focused case detail panel, and review action controls.
+- Evidence Trail: selected case detail, audit timeline, agent classification, and recommended human action.
+
 ## Expected Q3 Summary
 
 - Gross variance detected: `$16,000`
