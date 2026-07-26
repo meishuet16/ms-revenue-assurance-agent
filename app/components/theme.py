@@ -614,6 +614,30 @@ div[data-testid="stButton"] button:hover {
   color: var(--ra-blue);
 }
 
+div[data-baseweb="select"] > div,
+div[data-testid="stTextInput"] input,
+div[data-testid="stTextArea"] textarea {
+  border-radius: 7px;
+  border-color: #cdd7e1;
+  background: #ffffff;
+}
+
+div[data-testid="stTextInput"] label,
+div[data-testid="stTextArea"] label,
+div[data-testid="stSelectbox"] label {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+div[data-testid="stDataFrame"] {
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .ra-action-panel {
   background: #ffffff;
   border: 1px solid var(--ra-line);
