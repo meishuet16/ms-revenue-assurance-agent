@@ -4,6 +4,7 @@ import streamlit as st
 
 from app.components.formatting import format_coverage, format_money, format_status
 from app.components.metrics import render_summary_metrics
+from app.components.outcome_mix import render_outcome_mix
 from app.components.section import render_section_header
 from app.components.status_strip import render_status_strip
 from app.components.status_badge import status_badge
@@ -18,7 +19,9 @@ def render() -> None:
         "Separated outcomes for finance review. Suspected leakage is not combined with evidence conflicts.",
     )
     render_status_strip()
-    render_summary_metrics(fetch_summary())
+    summary = fetch_summary()
+    render_summary_metrics(summary)
+    render_outcome_mix(summary)
     st.markdown(
         '<div class="ra-note">Live Snowflake validation is pending. Offline mode uses deterministic synthetic fixtures.</div>',
         unsafe_allow_html=True,
