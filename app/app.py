@@ -19,8 +19,8 @@ shadowed_app = sys.modules.get("app")
 if shadowed_app is not None and not hasattr(shadowed_app, "__path__"):
     sys.modules.pop("app", None)
 
-from app.pages import case_queue, evidence_trail, summary
 from app.components.theme import apply_theme, render_hero
+from app.views import case_queue, evidence_trail, summary
 
 
 st.set_page_config(page_title="Revenue Assurance Agent", layout="wide")
