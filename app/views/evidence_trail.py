@@ -5,6 +5,7 @@ import streamlit as st
 from app.components.action_panel import render_action_panel
 from app.components.case_detail import render_case_detail
 from app.components.evidence_timeline import render_evidence_timeline
+from app.components.evidence_summary import render_evidence_summary
 from app.components.formatting import format_status
 from app.components.section import render_section_header
 from app.components.status_badge import status_badge
@@ -19,6 +20,7 @@ def render() -> None:
     )
     cases = fetch_cases()
     selected = st.selectbox("Case", cases, format_func=lambda case: f"{case.customer_name} - {case.case_id}")
+    render_evidence_summary(selected)
     left, right = st.columns([1.1, 1])
     with left:
         render_case_detail(selected)

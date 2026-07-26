@@ -492,6 +492,36 @@ div[data-testid="stExpander"] {
   padding-left: 18px;
 }
 
+.ra-evidence-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 4px 0 14px;
+}
+
+.ra-evidence-summary div {
+  background: #ffffff;
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 11px 12px;
+}
+
+.ra-evidence-summary span {
+  color: var(--ra-muted);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ra-evidence-summary strong {
+  color: var(--ra-ink);
+  display: block;
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
 .ra-timeline-item {
   position: relative;
   margin-bottom: 14px;
