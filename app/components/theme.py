@@ -50,6 +50,36 @@ div[data-testid="stMetricValue"] {
   font-size: 1.55rem;
 }
 
+.ra-metric-card {
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 14px 15px;
+  min-height: 116px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ra-metric-card__label {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ra-metric-card__value {
+  color: var(--ra-ink);
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.ra-metric-card__helper {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  margin-top: 6px;
+}
+
 .ra-hero {
   border: 1px solid var(--ra-line);
   background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
