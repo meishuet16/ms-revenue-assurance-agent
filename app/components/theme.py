@@ -159,6 +159,23 @@ div[data-testid="stMetricValue"] {
   font-size: 0.96rem;
 }
 
+.ra-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ra-hero__chips span {
+  color: #e0f2fe;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .ra-note {
   color: var(--ra-muted);
   background: var(--ra-soft);
@@ -493,6 +510,11 @@ def render_hero(title: str, copy: str, eyebrow: str = "Revenue Assurance") -> No
           <div class="ra-hero__eyebrow">{eyebrow}</div>
           <div class="ra-hero__title">{title}</div>
           <div class="ra-hero__copy">{copy}</div>
+          <div class="ra-hero__chips">
+            <span>Q3 2026 review</span>
+            <span>Offline synthetic fixtures</span>
+            <span>Snowflake validation pending</span>
+          </div>
         </div>
         """,
         unsafe_allow_html=True,
