@@ -15,6 +15,7 @@ def render_case_table(cases) -> None:
             "Amount": format_money(case.gross_variance),
             "Confidence": case.confidence_tier.replace("_", " ").title(),
             "Review status": case.review_status,
+            "Action": case.queue_action,
         }
         for case in cases
     ]

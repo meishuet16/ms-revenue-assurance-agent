@@ -51,6 +51,18 @@ class InvestigationCase:
     finding_key: str | None = None
     evidence: tuple[Evidence, ...] = field(default_factory=tuple)
 
+    @property
+    def queue_action(self) -> str:
+        if self.status == "suspected_leakage":
+            return "Review"
+        if self.status == "explained_variance":
+            return "Close"
+        if self.status == "evidence_conflict":
+            return "Resolve"
+        if self.status == "insufficient_data":
+            return "Assign"
+        return "Review"
+
     @classmethod
     def synthetic(
         cls,
@@ -278,4 +290,3 @@ def score_evaluation_cases(cases: list[dict[str, str]]) -> dict[str, float | int
         "monetary_calculation_accuracy": monetary_correct / total,
         "evidence_citation_completeness": evidence_complete / total,
     }
-
