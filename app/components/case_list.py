@@ -11,7 +11,7 @@ def render_case_list(cases) -> None:
     for case in cases:
         cards.append(
             f"""
-            <div class="ra-case-row">
+            <div class="ra-case-row ra-case-row--{case.status}">
               <div class="ra-case-row__main">
                 <div class="ra-case-row__customer">{case.customer_name}</div>
                 <div class="ra-case-row__meta">{case.case_id} · {case.queue_action}</div>

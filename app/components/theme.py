@@ -517,7 +517,18 @@ div[data-testid="stButton"] button:hover {
   padding: 12px 14px;
   margin-bottom: 8px;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 }
+
+.ra-case-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+}
+
+.ra-case-row--suspected_leakage { border-left: 5px solid var(--ra-red); }
+.ra-case-row--explained_variance { border-left: 5px solid var(--ra-green); }
+.ra-case-row--evidence_conflict { border-left: 5px solid var(--ra-amber); }
+.ra-case-row--insufficient_data { border-left: 5px solid #667085; }
 
 .ra-case-row__customer {
   color: var(--ra-ink);
