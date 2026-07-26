@@ -6,30 +6,72 @@ import streamlit as st
 THEME_CSS = """
 <style>
 :root {
-  --ra-ink: #172026;
-  --ra-muted: #63717a;
-  --ra-line: #d8e0e6;
+  --ra-ink: #111827;
+  --ra-muted: #667085;
+  --ra-line: #d9e2ea;
   --ra-panel: #ffffff;
-  --ra-soft: #f5f8fa;
+  --ra-soft: #f6f8fb;
+  --ra-wash: #eef4f8;
   --ra-red: #b42318;
   --ra-red-bg: #fff1f0;
   --ra-green: #067647;
   --ra-green-bg: #ecfdf3;
   --ra-amber: #b54708;
   --ra-amber-bg: #fffaeb;
-  --ra-blue: #175cd3;
-  --ra-blue-bg: #eff8ff;
+  --ra-blue: #155eef;
+  --ra-blue-bg: #eff4ff;
+  --ra-navy: #182230;
 }
 
+.stApp {
+  background:
+    linear-gradient(180deg, #eef4f8 0, #f7f9fb 280px, #f7f9fb 100%);
+}
+
+.stMainBlockContainer,
 .block-container {
-  padding-top: 1.4rem;
-  padding-bottom: 2.5rem;
-  max-width: 1180px;
+  padding-top: 0.95rem;
+  padding-bottom: 2.4rem;
+  max-width: 1240px;
 }
 
 h1, h2, h3 {
   color: var(--ra-ink);
   letter-spacing: 0;
+}
+
+section[data-testid="stSidebar"],
+div[data-testid="stSidebarCollapsedControl"],
+div[data-testid="stToolbar"],
+div[data-testid="stDecoration"],
+footer {
+  display: none !important;
+}
+
+header[data-testid="stHeader"] {
+  background: transparent;
+  height: 0;
+}
+
+div[data-testid="stTabs"] button {
+  border-radius: 6px;
+  color: #475467;
+  font-weight: 700;
+}
+
+div[data-testid="stTabs"] button[aria-selected="true"] {
+  background: #ffffff;
+  color: var(--ra-blue);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+div[data-testid="stTabs"] div[role="tablist"] {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(216, 224, 230, 0.95);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 1.1rem;
 }
 
 div[data-testid="stMetric"] {
@@ -81,15 +123,17 @@ div[data-testid="stMetricValue"] {
 }
 
 .ra-hero {
-  border: 1px solid var(--ra-line);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background:
+    linear-gradient(135deg, rgba(24, 34, 48, 0.96) 0%, rgba(26, 64, 91, 0.94) 56%, rgba(21, 94, 239, 0.82) 100%);
   border-radius: 8px;
-  padding: 18px 20px;
-  margin-bottom: 18px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 18px 38px rgba(24, 34, 48, 0.14);
 }
 
 .ra-hero__eyebrow {
-  color: var(--ra-blue);
+  color: #b2ddff;
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -97,14 +141,14 @@ div[data-testid="stMetricValue"] {
 }
 
 .ra-hero__title {
-  color: var(--ra-ink);
-  font-size: 1.35rem;
-  font-weight: 700;
+  color: #ffffff;
+  font-size: 1.55rem;
+  font-weight: 800;
   margin-bottom: 4px;
 }
 
 .ra-hero__copy {
-  color: var(--ra-muted);
+  color: #d1e9ff;
   font-size: 0.96rem;
 }
 
