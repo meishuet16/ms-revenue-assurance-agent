@@ -246,6 +246,67 @@ div[data-testid="stMetricValue"] {
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
+.ra-timeline {
+  border-left: 2px solid var(--ra-line);
+  margin-left: 13px;
+  padding-left: 18px;
+}
+
+.ra-timeline-item {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.ra-timeline-item__index {
+  position: absolute;
+  left: -33px;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--ra-blue-bg);
+  color: var(--ra-blue);
+  border: 1px solid #b2ddff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.ra-timeline-item__body {
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.ra-timeline-item__type {
+  color: var(--ra-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ra-timeline-item__id {
+  color: var(--ra-ink);
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.ra-timeline-item__excerpt {
+  color: var(--ra-ink);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+
+.ra-timeline-item__source {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  margin-top: 8px;
+}
 </style>
 """
 
