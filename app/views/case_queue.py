@@ -4,6 +4,7 @@ import streamlit as st
 
 from app.components.case_table import render_case_table
 from app.components.case_detail import render_case_detail
+from app.components.case_list import render_case_list
 from app.services.review_service import update_review_status
 from app.services.snowflake_service import fetch_cases
 
@@ -14,6 +15,8 @@ def render() -> None:
     left, right = st.columns([1.35, 1])
     with left:
         st.caption("Finance review queue")
+        render_case_list(cases)
+        st.caption("Structured table")
         render_case_table(cases)
     with right:
         selected = st.selectbox("Focused case", cases, format_func=lambda case: f"{case.customer_name} - {case.status}")

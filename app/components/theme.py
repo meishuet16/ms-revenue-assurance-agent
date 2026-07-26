@@ -407,6 +407,42 @@ div[data-testid="stMetricValue"] {
   line-height: 1.35;
   margin-bottom: 12px;
 }
+
+.ra-case-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ra-case-row__customer {
+  color: var(--ra-ink);
+  font-weight: 800;
+}
+
+.ra-case-row__meta {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.ra-case-row__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.ra-case-row__amount {
+  color: var(--ra-ink);
+  font-weight: 800;
+}
 </style>
 """
 
