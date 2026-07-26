@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import streamlit as st
 
+from app.components.action_panel import render_action_panel
 from app.components.case_detail import render_case_detail
 from app.components.evidence_timeline import render_evidence_timeline
 from app.components.formatting import format_status
@@ -31,4 +32,4 @@ def render() -> None:
             unsafe_allow_html=True,
         )
         st.subheader("Recommended Human Action")
-        st.write(selected.recommended_action)
+        render_action_panel("Finance next step", selected.recommended_action)

@@ -248,10 +248,11 @@ div[data-testid="stMetricValue"] {
 }
 
 .ra-detail-panel {
-  background: var(--ra-panel);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   border: 1px solid var(--ra-line);
   border-radius: 8px;
   padding: 16px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
 
 .ra-detail-panel__header {
@@ -406,6 +407,40 @@ div[data-testid="stMetricValue"] {
   font-size: 0.86rem;
   line-height: 1.35;
   margin-bottom: 12px;
+}
+
+div[data-testid="stButton"] button {
+  width: 100%;
+  border-radius: 7px;
+  border: 1px solid #cdd7e1;
+  font-weight: 800;
+}
+
+div[data-testid="stButton"] button:hover {
+  border-color: var(--ra-blue);
+  color: var(--ra-blue);
+}
+
+.ra-action-panel {
+  background: #ffffff;
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ra-action-panel__label {
+  color: var(--ra-blue);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.ra-action-panel__copy {
+  color: var(--ra-ink);
+  font-size: 0.93rem;
+  line-height: 1.45;
 }
 
 .ra-case-row {
