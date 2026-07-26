@@ -414,6 +414,18 @@ div[data-testid="stExpander"] {
   margin-top: 10px;
 }
 
+.ra-branch-card__action {
+  display: inline-flex;
+  color: var(--ra-ink);
+  background: #f9fafb;
+  border: 1px solid #eaecf0;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 4px 9px;
+  margin-top: 12px;
+}
+
 .ra-detail-panel {
   background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   border: 1px solid var(--ra-line);

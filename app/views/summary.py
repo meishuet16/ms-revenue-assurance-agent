@@ -40,6 +40,7 @@ def render() -> None:
               <div class="ra-branch-card__amount">{amount}</div>
               <div class="ra-branch-card__meta">{format_coverage(case.coverage)} coverage</div>
               <div class="ra-branch-card__copy">{case.evidence_summary}</div>
+              <div class="ra-branch-card__action">{case.queue_action}</div>
             </div>
             """,
             unsafe_allow_html=True,
