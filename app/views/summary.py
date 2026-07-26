@@ -4,19 +4,24 @@ import streamlit as st
 
 from app.components.formatting import format_coverage, format_money, format_status
 from app.components.metrics import render_summary_metrics
+from app.components.section import render_section_header
 from app.components.status_badge import status_badge
 from app.services.snowflake_service import fetch_cases
 from app.services.snowflake_service import fetch_summary
 
 
 def render() -> None:
-    st.header("Investigation Summary")
+    render_section_header(
+        "Investigation Summary",
+        "Executive overview",
+        "Separated outcomes for finance review. Suspected leakage is not combined with evidence conflicts.",
+    )
     render_summary_metrics(fetch_summary())
     st.markdown(
         '<div class="ra-note">Live Snowflake validation is pending. Offline mode uses deterministic synthetic fixtures.</div>',
         unsafe_allow_html=True,
     )
-    st.subheader("Q3 2026 Decision Branches")
+    render_section_header("Q3 2026 Decision Branches", "Case outcomes")
     cols = st.columns(2)
     for index, case in enumerate(fetch_cases()):
         amount = format_money(case.gross_variance)

@@ -40,6 +40,37 @@ h1, h2, h3 {
   letter-spacing: 0;
 }
 
+.ra-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 4px 0 14px;
+}
+
+.ra-section-header__eyebrow {
+  color: var(--ra-blue);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ra-section-header__title {
+  color: var(--ra-ink);
+  font-size: 1.25rem;
+  font-weight: 850;
+  margin-top: 2px;
+}
+
+.ra-section-header__copy {
+  color: var(--ra-muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  margin-top: 4px;
+  max-width: 780px;
+}
+
 section[data-testid="stSidebar"],
 div[data-testid="stSidebarCollapsedControl"],
 div[data-testid="stToolbar"],
@@ -183,6 +214,21 @@ div[data-testid="stMetricValue"] {
   border-radius: 6px;
   padding: 10px 12px;
   margin: 10px 0 18px;
+}
+
+.ra-panel-label {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 2px 0 8px;
+}
+
+div[data-testid="stExpander"] {
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .ra-pill {

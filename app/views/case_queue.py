@@ -5,23 +5,28 @@ import streamlit as st
 from app.components.case_table import render_case_table
 from app.components.case_detail import render_case_detail
 from app.components.case_list import render_case_list
+from app.components.section import render_section_header
 from app.services.review_service import update_review_status
 from app.services.snowflake_service import fetch_cases
 
 
 def render() -> None:
-    st.header("Case Queue")
+    render_section_header(
+        "Case Queue",
+        "Finance workbench",
+        "Prioritize findings, inspect evidence summaries, and record human review state.",
+    )
     cases = fetch_cases()
     left, right = st.columns([1.35, 1])
     with left:
-        st.caption("Finance review queue")
+        st.markdown('<div class="ra-panel-label">Finance review queue</div>', unsafe_allow_html=True)
         render_case_list(cases)
-        st.caption("Structured table")
-        render_case_table(cases)
+        with st.expander("Audit table", expanded=False):
+            render_case_table(cases)
     with right:
         selected = st.selectbox("Focused case", cases, format_func=lambda case: f"{case.customer_name} - {case.status}")
         render_case_detail(selected)
-        st.subheader("Review Action")
+        render_section_header("Review Action", "Human decision")
         st.markdown(
             """
             <div class="ra-safety-panel">
