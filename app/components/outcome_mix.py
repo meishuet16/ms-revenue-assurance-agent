@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 
 import streamlit as st
 
@@ -10,7 +10,7 @@ from app.components.formatting import format_money
 def _percent(part: Decimal, whole: Decimal) -> Decimal:
     if whole == 0:
         return Decimal("0")
-    return (part / whole * Decimal("100")).quantize(Decimal("0.1"))
+    return (part / whole * Decimal("100")).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
 
 
 def render_outcome_mix(summary) -> None:
