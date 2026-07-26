@@ -95,11 +95,18 @@ div[data-testid="stMetricValue"] {
 .ra-metric-card {
   background: var(--ra-panel);
   border: 1px solid var(--ra-line);
+  border-top: 4px solid #d0d5dd;
   border-radius: 8px;
   padding: 14px 15px;
   min-height: 116px;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
+
+.ra-metric-card--blue { border-top-color: var(--ra-blue); }
+.ra-metric-card--danger { border-top-color: var(--ra-red); }
+.ra-metric-card--success { border-top-color: var(--ra-green); }
+.ra-metric-card--warning { border-top-color: var(--ra-amber); }
+.ra-metric-card--neutral { border-top-color: #667085; }
 
 .ra-metric-card__label {
   color: var(--ra-muted);
@@ -199,10 +206,18 @@ div[data-testid="stMetricValue"] {
 .ra-branch-card {
   background: var(--ra-panel);
   border: 1px solid var(--ra-line);
+  border-left: 5px solid #d0d5dd;
   border-radius: 8px;
   padding: 14px 16px;
   margin-bottom: 12px;
+  min-height: 176px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
+
+.ra-branch-card--suspected_leakage { border-left-color: var(--ra-red); }
+.ra-branch-card--explained_variance { border-left-color: var(--ra-green); }
+.ra-branch-card--evidence_conflict { border-left-color: var(--ra-amber); }
+.ra-branch-card--insufficient_data { border-left-color: #667085; }
 
 .ra-branch-card__top {
   display: flex;

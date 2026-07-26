@@ -22,7 +22,7 @@ def render() -> None:
         amount = format_money(case.gross_variance)
         cols[index % 2].markdown(
             f"""
-            <div class="ra-branch-card">
+            <div class="ra-branch-card ra-branch-card--{case.status}">
               <div class="ra-branch-card__top">
                 <strong>{case.customer_name}</strong>
                 {status_badge(case.status)}

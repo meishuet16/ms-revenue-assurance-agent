@@ -17,12 +17,12 @@ def _metric_card(label: str, value: str, helper: str) -> str:
 
 def render_summary_metrics(summary) -> None:
     metrics = [
-        ("Gross variance", format_money(summary.gross_variance_detected), "Detected before classification"),
-        ("Suspected leakage", format_money(summary.suspected_leakage), "Pending finance confirmation"),
-        ("Explained", format_money(summary.explained_variance), "Supported by exception evidence"),
-        ("Evidence conflict", format_money(summary.evidence_conflict), "Requires approval resolution"),
-        ("Data quality", str(summary.insufficient_data_cases), "Calculation intentionally stopped"),
+        ("Gross variance", format_money(summary.gross_variance_detected), "Detected before classification", "blue"),
+        ("Suspected leakage", format_money(summary.suspected_leakage), "Pending finance confirmation", "danger"),
+        ("Explained", format_money(summary.explained_variance), "Supported by exception evidence", "success"),
+        ("Evidence conflict", format_money(summary.evidence_conflict), "Requires approval resolution", "warning"),
+        ("Data quality", str(summary.insufficient_data_cases), "Calculation intentionally stopped", "neutral"),
     ]
     cols = st.columns(len(metrics))
-    for col, (label, value, helper) in zip(cols, metrics):
-        col.markdown(_metric_card(label, value, helper), unsafe_allow_html=True)
+    for col, (label, value, helper, tone) in zip(cols, metrics):
+        col.markdown(_metric_card(label, value, helper).replace("ra-metric-card", f"ra-metric-card ra-metric-card--{tone}", 1), unsafe_allow_html=True)
