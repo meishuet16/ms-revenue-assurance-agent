@@ -151,6 +151,42 @@ div[data-testid="stMetricValue"] {
   background: #f2f4f7;
   border-color: #eaecf0;
 }
+
+.ra-branch-card {
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.ra-branch-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ra-ink);
+}
+
+.ra-branch-card__amount {
+  color: var(--ra-ink);
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+.ra-branch-card__meta {
+  color: var(--ra-muted);
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+
+.ra-branch-card__copy {
+  color: var(--ra-muted);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  margin-top: 10px;
+}
 </style>
 """
 
