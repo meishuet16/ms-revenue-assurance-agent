@@ -86,6 +86,41 @@ div[data-testid="stMetricValue"] {
   padding: 10px 12px;
   margin: 10px 0 18px;
 }
+
+.ra-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.ra-pill--danger {
+  color: var(--ra-red);
+  background: var(--ra-red-bg);
+  border-color: #fecdca;
+}
+
+.ra-pill--success {
+  color: var(--ra-green);
+  background: var(--ra-green-bg);
+  border-color: #abefc6;
+}
+
+.ra-pill--warning {
+  color: var(--ra-amber);
+  background: var(--ra-amber-bg);
+  border-color: #fedf89;
+}
+
+.ra-pill--neutral {
+  color: #344054;
+  background: #f2f4f7;
+  border-color: #eaecf0;
+}
 </style>
 """
 
