@@ -307,6 +307,36 @@ div[data-testid="stMetricValue"] {
   font-size: 0.78rem;
   margin-top: 8px;
 }
+
+.ra-classification-panel {
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.ra-classification-panel__label {
+  color: var(--ra-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.ra-classification-panel__title {
+  color: var(--ra-ink);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.ra-classification-panel__copy {
+  color: var(--ra-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: 8px;
+}
 </style>
 """
 
