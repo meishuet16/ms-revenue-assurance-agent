@@ -1,0 +1,107 @@
+from __future__ import annotations
+
+import streamlit as st
+
+
+THEME_CSS = """
+<style>
+:root {
+  --ra-ink: #172026;
+  --ra-muted: #63717a;
+  --ra-line: #d8e0e6;
+  --ra-panel: #ffffff;
+  --ra-soft: #f5f8fa;
+  --ra-red: #b42318;
+  --ra-red-bg: #fff1f0;
+  --ra-green: #067647;
+  --ra-green-bg: #ecfdf3;
+  --ra-amber: #b54708;
+  --ra-amber-bg: #fffaeb;
+  --ra-blue: #175cd3;
+  --ra-blue-bg: #eff8ff;
+}
+
+.block-container {
+  padding-top: 1.4rem;
+  padding-bottom: 2.5rem;
+  max-width: 1180px;
+}
+
+h1, h2, h3 {
+  color: var(--ra-ink);
+  letter-spacing: 0;
+}
+
+div[data-testid="stMetric"] {
+  background: var(--ra-panel);
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+div[data-testid="stMetricLabel"] p {
+  color: var(--ra-muted);
+  font-size: 0.82rem;
+}
+
+div[data-testid="stMetricValue"] {
+  color: var(--ra-ink);
+  font-size: 1.55rem;
+}
+
+.ra-hero {
+  border: 1px solid var(--ra-line);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.ra-hero__eyebrow {
+  color: var(--ra-blue);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.ra-hero__title {
+  color: var(--ra-ink);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ra-hero__copy {
+  color: var(--ra-muted);
+  font-size: 0.96rem;
+}
+
+.ra-note {
+  color: var(--ra-muted);
+  background: var(--ra-soft);
+  border-left: 4px solid var(--ra-blue);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 10px 0 18px;
+}
+</style>
+"""
+
+
+def apply_theme() -> None:
+    st.markdown(THEME_CSS, unsafe_allow_html=True)
+
+
+def render_hero(title: str, copy: str, eyebrow: str = "Revenue Assurance") -> None:
+    st.markdown(
+        f"""
+        <div class="ra-hero">
+          <div class="ra-hero__eyebrow">{eyebrow}</div>
+          <div class="ra-hero__title">{title}</div>
+          <div class="ra-hero__copy">{copy}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )

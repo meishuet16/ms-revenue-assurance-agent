@@ -20,10 +20,15 @@ if shadowed_app is not None and not hasattr(shadowed_app, "__path__"):
     sys.modules.pop("app", None)
 
 from app.pages import case_queue, evidence_trail, summary
+from app.components.theme import apply_theme, render_hero
 
 
 st.set_page_config(page_title="Revenue Assurance Agent", layout="wide")
-st.title("Revenue Assurance Investigation Agent")
+apply_theme()
+render_hero(
+    "Revenue Assurance Investigation Agent",
+    "Evidence-backed Q3 billing integrity review for finance triage.",
+)
 
 tab_summary, tab_queue, tab_evidence = st.tabs(["Summary", "Case Queue", "Evidence Trail"])
 with tab_summary:
