@@ -131,6 +131,7 @@ Dashboard views:
 - Summary: executive metric row and Q3 decision branch cards.
 - Case Queue: queue table, focused case detail panel, and review action controls.
 - Evidence Trail: selected case detail, audit timeline, agent classification, and recommended human action.
+- Flow Map: visual investigation path from variance detection through evidence validation to finance review outcome.
 
 ## Expected Q3 Summary
 

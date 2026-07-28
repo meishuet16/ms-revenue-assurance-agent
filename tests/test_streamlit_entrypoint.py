@@ -30,4 +30,4 @@ def test_streamlit_entrypoint_wires_expected_dashboard_tabs():
     entrypoint = root / "app" / "app.py"
     source = entrypoint.read_text(encoding="utf-8")
 
-    assert 'st.tabs(["Summary", "Case Queue", "Evidence Trail"])' in source
+    assert 'st.tabs(["Summary", "Case Queue", "Evidence Trail", "Flow Map"])' in source

@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from app.config import Settings
+from app.components.flow_map import build_flow_map_html, flow_map_nodes
 from app.components.formatting import format_money, format_status, status_tone
 from app.components.setup_readiness import build_setup_readiness_html, next_command, readiness_items
 from app.components.status_strip import validation_label
@@ -15,6 +16,21 @@ def test_dashboard_money_status_and_action_labels_are_stable():
     assert format_status("evidence_conflict") == "Evidence conflict"
     assert status_tone("suspected_leakage") == "danger"
     assert result.case_by_customer("CUST-SUMMIT").queue_action == "Assign"
+
+
+def test_flow_map_visualization_uses_case_data_and_workflow_lanes():
+    result = run_q3_golden_investigation()
+
+    nodes = flow_map_nodes(result.cases)
+    html = build_flow_map_html(result.cases)
+
+    assert len(nodes) == 4
+    assert nodes[0].customer_name == "Nova Retail"
+    assert "Detect" in html
+    assert "Validate" in html
+    assert "Prepare" in html
+    assert "CASE-NOVA-Q3" in html
+    assert "Suspected leakage" in html
 
 
 def test_validation_label_reflects_dashboard_mode_without_live_connection():

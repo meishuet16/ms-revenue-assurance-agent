@@ -327,6 +327,96 @@ div[data-testid="stMetricValue"] {
   margin-top: 4px;
 }
 
+.ra-flow-map {
+  background: #ffffff;
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ra-flow-map__lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ra-flow-lane {
+  background: var(--ra-soft);
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  padding: 13px 14px;
+}
+
+.ra-flow-lane span {
+  color: var(--ra-blue);
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ra-flow-lane strong {
+  color: var(--ra-ink);
+  display: block;
+  font-size: 0.94rem;
+  margin-top: 4px;
+}
+
+.ra-flow-map__connector {
+  height: 34px;
+  margin: 4px 0 2px;
+  background:
+    linear-gradient(90deg, transparent 0, transparent 7%, rgba(21, 94, 239, 0.22) 7%, rgba(21, 94, 239, 0.22) 93%, transparent 93%),
+    linear-gradient(180deg, transparent 0, transparent 45%, rgba(21, 94, 239, 0.38) 45%, rgba(21, 94, 239, 0.38) 55%, transparent 55%);
+}
+
+.ra-flow-map__nodes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ra-flow-node {
+  border: 1px solid var(--ra-line);
+  border-top: 5px solid #667085;
+  border-radius: 8px;
+  min-height: 142px;
+  padding: 13px;
+  background:
+    linear-gradient(180deg, rgba(246, 248, 251, 0.8), #ffffff);
+}
+
+.ra-flow-node--suspected_leakage { border-top-color: var(--ra-red); }
+.ra-flow-node--explained_variance { border-top-color: var(--ra-green); }
+.ra-flow-node--evidence_conflict { border-top-color: var(--ra-amber); }
+.ra-flow-node--insufficient_data { border-top-color: #667085; }
+
+.ra-flow-node__customer {
+  color: var(--ra-ink);
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.ra-flow-node__case {
+  color: var(--ra-muted);
+  font-size: 0.72rem;
+  margin-top: 3px;
+}
+
+.ra-flow-node__outcome {
+  color: var(--ra-ink);
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin-top: 14px;
+}
+
+.ra-flow-node__meta {
+  color: var(--ra-muted);
+  font-size: 0.78rem;
+  margin-top: 6px;
+}
+
 .ra-outcome-mix {
   background: #ffffff;
   border: 1px solid var(--ra-line);
@@ -819,6 +909,8 @@ div[data-testid="stDataFrame"] {
 @media (max-width: 760px) {
   .ra-status-strip,
   .ra-readiness__grid,
+  .ra-flow-map__lanes,
+  .ra-flow-map__nodes,
   .ra-outcome-mix__legend {
     grid-template-columns: 1fr;
   }
