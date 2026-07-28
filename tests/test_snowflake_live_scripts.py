@@ -5,6 +5,7 @@ import tempfile
 
 from app.config import Settings
 from app.services import snowflake_service
+from app.services.snowflake_service import SnowflakeUnavailable
 from scripts import setup_project, verify_database
 from scripts.validate_environment import describe_environment, missing_environment_variables
 
@@ -55,6 +56,25 @@ def test_environment_description_redacts_password_but_reports_length():
     assert "SNOWFLAKE_PASSWORD=<hidden>, length=12" in rows
     assert all("super-secret" not in row for row in rows)
     assert "SNOWFLAKE_ACCOUNT=CIZUPDQ-NV95442, length=15" in rows
+
+
+def test_snowflake_error_guidance_classifies_common_connection_failures():
+    host_error = RuntimeError("404 Not Found: post CW23947.snowflakecomputing.com:443/session/authenticator-request")
+    saml_error = RuntimeError("390190 SAML Identity Provider account parameter")
+    missing_error = SnowflakeUnavailable("Snowflake credentials are not configured")
+
+    assert "account identifier" in setup_project.snowflake_error_guidance(host_error)
+    assert "SNOWFLAKE_AUTHENTICATOR" in setup_project.snowflake_error_guidance(saml_error)
+    assert "validate_environment.py" in setup_project.snowflake_error_guidance(missing_error)
+
+
+def test_run_live_setup_returns_failure_without_traceback_when_connection_fails():
+    def failing_connect():
+        raise SnowflakeUnavailable("Snowflake credentials are not configured")
+
+    exit_code = setup_project.run_live_setup([], "COMPUTE_WH", connect_fn=failing_connect)
+
+    assert exit_code == 1
 
 
 def test_dashboard_uses_offline_fixtures_when_credentials_exist_without_live_mode():

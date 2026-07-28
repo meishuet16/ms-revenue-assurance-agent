@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.services.snowflake_service import connect  # noqa: E402
+from scripts.setup_project import print_snowflake_error  # noqa: E402
 
 
 EXPECTED_TABLES = [
@@ -121,8 +122,12 @@ def verify_database(connection: object) -> VerificationResult:
 
 
 def main() -> int:
-    with connect() as connection:
-        result = verify_database(connection)
+    try:
+        with connect() as connection:
+            result = verify_database(connection)
+    except Exception as exc:
+        print_snowflake_error(exc)
+        return 1
 
     for check in result.checks:
         status = "PASS" if check.ok else "FAIL"

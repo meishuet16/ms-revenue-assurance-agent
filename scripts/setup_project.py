@@ -11,6 +11,7 @@ if str(ROOT) not in sys.path:
 
 from app.config import settings  # noqa: E402
 from app.services.snowflake_service import connect  # noqa: E402
+from app.services.snowflake_service import SnowflakeUnavailable  # noqa: E402
 
 
 SQL_ORDER = [
@@ -125,6 +126,55 @@ def execute_sql_files(connection: object, paths: list[pathlib.Path], warehouse: 
     return executed
 
 
+def snowflake_error_guidance(error: Exception) -> str:
+    message = str(error)
+    lowered = message.lower()
+    if isinstance(error, SnowflakeUnavailable) or "credentials are not configured" in lowered:
+        return (
+            "Snowflake credentials are not configured. Run `python scripts\\validate_environment.py` "
+            "and confirm SNOWFLAKE_PASSWORD has a non-zero length, or set SNOWFLAKE_AUTHENTICATOR=externalbrowser."
+        )
+    if "404 not found" in lowered and "snowflakecomputing.com" in lowered:
+        return (
+            "Snowflake rejected the account host. Use the full account identifier from Snowsight, "
+            "for example `CIZUPDQ-NV95442`, not only the account locator."
+        )
+    if "saml identity provider" in lowered or "390190" in lowered:
+        return (
+            "Snowflake external browser authentication was rejected by the account. Remove "
+            "SNOWFLAKE_AUTHENTICATOR and use SNOWFLAKE_PASSWORD, or verify the account supports SSO browser auth."
+        )
+    if "warehouse" in lowered and ("does not exist" in lowered or "not authorized" in lowered):
+        return (
+            "The configured warehouse is missing or not authorized. Confirm SNOWFLAKE_WAREHOUSE and role, "
+            "or rerun setup with `--warehouse COMPUTE_WH`."
+        )
+    if "cortex search" in lowered:
+        return (
+            "Cortex Search setup failed. The core schema may still be usable; rerun setup with `--skip-search` "
+            "if Cortex Search is not enabled in this account yet."
+        )
+    return "Snowflake live operation failed. Check the account, role, warehouse, and Snowflake feature availability."
+
+
+def print_snowflake_error(error: Exception) -> None:
+    print("Snowflake live operation failed.")
+    print(f"Error type: {type(error).__name__}")
+    print(f"Error summary: {error}")
+    print(f"Suggested next step: {snowflake_error_guidance(error)}")
+
+
+def run_live_setup(paths: list[pathlib.Path], warehouse: str, connect_fn=connect) -> int:
+    try:
+        with connect_fn() as connection:
+            executed = execute_sql_files(connection, paths, warehouse=warehouse)
+    except Exception as exc:
+        print_snowflake_error(exc)
+        return 1
+    print(f"Snowflake setup complete. Executed {executed} statements.")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
@@ -141,9 +191,7 @@ def main() -> int:
             print(preview[:500].rstrip())
             print()
     if not args.dry_run:
-        with connect() as connection:
-            executed = execute_sql_files(connection, paths, warehouse=args.warehouse)
-        print(f"Snowflake setup complete. Executed {executed} statements.")
+        return run_live_setup(paths, args.warehouse)
     return 0
 
 
