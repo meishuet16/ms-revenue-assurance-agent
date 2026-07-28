@@ -4,6 +4,31 @@ A Snowflake CoCo CLI oriented revenue assurance workflow that detects billing va
 
 Dataset type: fully synthetic. No real customer, contract, invoice, employee, payment, or personally identifiable information is used.
 
+## Problem Statement
+
+Finance teams can see invoice variance totals, but they often cannot tell quickly whether a variance is recoverable revenue leakage, an approved commercial concession, a data-quality blocker, or a conflict between structured system data and source approval documents. Acting too early can create false billing corrections; acting too late can leave real leakage unresolved.
+
+This project targets **Problem Statement 1: Intelligent Workflow Automation Agent** by automating the investigation workflow around Q3 billing integrity while preserving a human finance review boundary.
+
+## Solution
+
+The Revenue Assurance Investigation Agent combines deterministic financial reconciliation with evidence-aware agent orchestration:
+
+- Snowflake SQL calculates expected billing, actual invoice amounts, variances, and ground-truth demo outcomes.
+- CoCo CLI prompt files and modular Agent Skills orchestrate the investigation workflow.
+- Cortex Search-ready synthetic approval documents support evidence validation.
+- The Streamlit dashboard presents prepared finance review cases, evidence trails, and safe review actions.
+
+The agent does **not** create invoices, update ledgers, contact customers, trigger payments, or change balances. It prepares auditable cases for human review.
+
+## Workflow
+
+1. **Detect** billing variances across pricing terms, usage records, invoice lines, and Q3 review periods.
+2. **Validate** commercial evidence by checking approved terms, concessions, exceptions, and supporting documents.
+3. **Classify** each finding as suspected leakage, explained variance, evidence conflict, or insufficient data.
+4. **Prepare** finance review cases with amounts, evidence citations, confidence tier, and recommended next action.
+5. **Review** cases in Streamlit without crossing the automation safety boundary.
+
 ## What Is Implemented
 
 - Three modular Agent Skills for CoCo CLI:
@@ -86,7 +111,7 @@ Unix helper:
 bash scripts/run_dashboard.sh
 ```
 
-Snowflake-backed mode is used automatically when Snowflake credentials are available.
+Dashboard fixture mode is the default, even when Snowflake credentials are present. Set `SNOWFLAKE_DASHBOARD_MODE=live` only after live Snowflake validation passes.
 
 The offline dashboard has been browser-checked locally at `http://localhost:8501`. It displays Summary, Case Queue, and Evidence Trail tabs from deterministic synthetic fixtures.
 
