@@ -6,7 +6,7 @@ import tempfile
 from app.config import Settings
 from app.services import snowflake_service
 from scripts import setup_project, verify_database
-from scripts.validate_environment import missing_environment_variables
+from scripts.validate_environment import describe_environment, missing_environment_variables
 
 
 def test_externalbrowser_settings_do_not_require_password_and_trim_values():
@@ -37,6 +37,24 @@ def test_validate_environment_accepts_externalbrowser_without_password():
     )
 
     assert missing == []
+
+
+def test_environment_description_redacts_password_but_reports_length():
+    rows = describe_environment(
+        {
+            "SNOWFLAKE_ACCOUNT": "CIZUPDQ-NV95442",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_PASSWORD": "super-secret",
+            "SNOWFLAKE_WAREHOUSE": "COMPUTE_WH",
+            "SNOWFLAKE_DATABASE": "REVENUE_ASSURANCE",
+            "SNOWFLAKE_SCHEMA": "PUBLIC",
+            "SNOWFLAKE_DASHBOARD_MODE": "fixture",
+        }
+    )
+
+    assert "SNOWFLAKE_PASSWORD=<hidden>, length=12" in rows
+    assert all("super-secret" not in row for row in rows)
+    assert "SNOWFLAKE_ACCOUNT=CIZUPDQ-NV95442, length=15" in rows
 
 
 def test_dashboard_uses_offline_fixtures_when_credentials_exist_without_live_mode():
