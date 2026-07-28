@@ -6,6 +6,7 @@ from app.components.formatting import format_coverage, format_money, format_stat
 from app.components.metrics import render_summary_metrics
 from app.components.outcome_mix import render_outcome_mix
 from app.components.section import render_section_header
+from app.components.setup_readiness import render_setup_readiness
 from app.components.status_strip import render_status_strip
 from app.components.status_badge import status_badge
 from app.services.snowflake_service import fetch_cases
@@ -21,6 +22,7 @@ def render() -> None:
     render_status_strip()
     summary = fetch_summary()
     render_summary_metrics(summary)
+    render_setup_readiness()
     render_outcome_mix(summary)
     st.markdown(
         '<div class="ra-note">Live Snowflake validation is pending. Offline mode uses deterministic synthetic fixtures.</div>',

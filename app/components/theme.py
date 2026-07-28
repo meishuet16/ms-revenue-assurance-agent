@@ -248,6 +248,85 @@ div[data-testid="stMetricValue"] {
   color: var(--ra-ink);
 }
 
+.ra-readiness {
+  background: #ffffff;
+  border: 1px solid var(--ra-line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.ra-readiness__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ra-readiness__eyebrow {
+  color: var(--ra-blue);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ra-readiness__title {
+  color: var(--ra-ink);
+  font-size: 1rem;
+  font-weight: 850;
+  margin-top: 2px;
+}
+
+.ra-readiness code {
+  background: var(--ra-soft);
+  border: 1px solid var(--ra-line);
+  border-radius: 6px;
+  color: var(--ra-ink);
+  display: block;
+  font-size: 0.76rem;
+  padding: 7px 9px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ra-readiness__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ra-readiness-card {
+  background: var(--ra-soft);
+  border: 1px solid #e4e7ec;
+  border-radius: 7px;
+  padding: 10px 11px;
+}
+
+.ra-readiness-card__label {
+  color: var(--ra-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ra-readiness-card strong {
+  color: var(--ra-ink);
+  display: block;
+  font-size: 0.95rem;
+  margin-top: 3px;
+}
+
+.ra-readiness-card span {
+  color: var(--ra-muted);
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  margin-top: 4px;
+}
+
 .ra-outcome-mix {
   background: #ffffff;
   border: 1px solid var(--ra-line);
@@ -735,6 +814,22 @@ div[data-testid="stDataFrame"] {
 .ra-case-row__amount {
   color: var(--ra-ink);
   font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .ra-status-strip,
+  .ra-readiness__grid,
+  .ra-outcome-mix__legend {
+    grid-template-columns: 1fr;
+  }
+
+  .ra-readiness__head {
+    flex-direction: column;
+  }
+
+  .ra-readiness code {
+    width: 100%;
+  }
 }
 </style>
 """
