@@ -65,6 +65,15 @@ python scripts/run_tests.py
 python scripts/run_evaluation.py
 ```
 
+Expected offline result:
+
+- tests pass through the deterministic Python engine;
+- evaluation reports 12 synthetic cases;
+- monetary calculation accuracy, classification accuracy, and evidence citation completeness report `1.0`;
+- unsafe action rate reports `0`.
+
+These commands do not require Snowflake credentials.
+
 ## Snowflake Setup
 
 Preview SQL files:
@@ -90,6 +99,8 @@ Expected command after CoCo CLI is installed and configured:
 ```bash
 cortex -c hackathon -w . -f prompts/run_q3_investigation.md
 ```
+
+Use this as the primary live workflow demo only after the local CoCo CLI profile and Snowflake account are validated. Until then, use the deterministic offline verification and Streamlit fixture mode for a reproducible demo.
 
 ## Streamlit
 
@@ -128,6 +139,24 @@ Dashboard views:
 - Suspected leakage pending finance confirmation: `$9,000`
 - Evidence conflict requiring resolution: `$1,000`
 - Data-quality cases: `1`
+
+## Demo Runbook
+
+Use `docs/demo-script.md` for the presenter sequence. The short path is:
+
+1. Run `python scripts/run_tests.py`.
+2. Run `python scripts/run_evaluation.py`.
+3. Launch `streamlit run app/app.py`.
+4. Walk through Summary, Case Queue, and Evidence Trail using offline fixtures.
+5. State that live Snowflake and CoCo CLI validation are pending configured account access.
+
+Supporting docs:
+
+- `docs/architecture.md` explains the CoCo CLI, Snowflake SQL, Cortex Search, and Streamlit boundaries.
+- `docs/evaluation-plan.md` describes the synthetic evaluation cases and metrics.
+- `docs/evaluation-report.md` records the current offline deterministic evaluation result.
+- `docs/known-limitations.md` lists MVP scope and pending live validation.
+- `docs/dataset-declaration.md` confirms the dataset is fully synthetic.
 
 ## Safety Boundary
 

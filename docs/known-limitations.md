@@ -22,5 +22,6 @@ The MVP does not support:
 - payment action;
 - legal determination of recoverability.
 
-Live Snowflake, Cortex Search, and CoCo CLI validation are pending trial account access.
+Live Snowflake validation is pending configured account access. That includes warehouse and role validation, SQL setup execution, Cortex Search service creation, and CoCo CLI end-to-end execution.
 
+The offline deterministic engine, tests, evaluation script, and Streamlit fixture-mode dashboard are available without Snowflake credentials.
