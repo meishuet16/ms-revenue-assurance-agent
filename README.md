@@ -16,9 +16,11 @@ Dataset type: fully synthetic. No real customer, contract, invoice, employee, pa
 - Offline deterministic Python engine for testing without Snowflake credentials.
 - Evaluation fixtures and metrics.
 
-## Pending Live Validation
+## Live Validation Status
 
-The user does not yet have a Snowflake contest trial account. All environment-independent components are implemented. Live Snowflake validation, Cortex Search creation, and CoCo CLI execution are pending.
+Environment-independent components are implemented and tested. The setup and verification scripts can now connect to Snowflake when credentials are provided through local environment variables.
+
+Live Snowflake execution must still be run from a configured account. Cortex Code execution is separate from the connector-based scripts and may require account entitlement or usage-limit access.
 
 ## Setup
 
@@ -53,6 +55,8 @@ python scripts/validate_environment.py
 python scripts/setup_project.py
 python scripts/verify_database.py
 ```
+
+The setup script creates the configured warehouse if needed, executes `sql/` files in dependency order, loads synthetic approval documents, and creates the Cortex Search service unless `--skip-search` is passed.
 
 ## CoCo CLI Demo
 
