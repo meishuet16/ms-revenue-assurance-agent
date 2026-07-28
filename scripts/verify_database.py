@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import argparse
 from dataclasses import dataclass
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -86,7 +87,7 @@ def cortex_search_exists(cursor: object) -> bool:
     return cursor.fetchone() is not None
 
 
-def verify_database(connection: object) -> VerificationResult:
+def verify_database(connection: object, allow_missing_search: bool = False) -> VerificationResult:
     checks: list[Check] = []
     with connection.cursor() as cursor:
         for table in EXPECTED_TABLES:
@@ -102,9 +103,29 @@ def verify_database(connection: object) -> VerificationResult:
 
         try:
             search_ok = cortex_search_exists(cursor)
-            checks.append(Check("cortex search search_approval_documents", search_ok, "present" if search_ok else "missing"))
+            if search_ok:
+                checks.append(Check("cortex search search_approval_documents", True, "present"))
+            elif allow_missing_search:
+                checks.append(
+                    Check(
+                        "cortex search search_approval_documents",
+                        True,
+                        "pending: missing because Cortex Search embeddings may be unavailable on trial accounts",
+                    )
+                )
+            else:
+                checks.append(Check("cortex search search_approval_documents", False, "missing"))
         except Exception as exc:
-            checks.append(Check("cortex search search_approval_documents", False, f"check failed: {exc}"))
+            if allow_missing_search:
+                checks.append(
+                    Check(
+                        "cortex search search_approval_documents",
+                        True,
+                        f"pending: check failed but allowed for trial accounts: {exc}",
+                    )
+                )
+            else:
+                checks.append(Check("cortex search search_approval_documents", False, f"check failed: {exc}"))
 
         try:
             row_count = fetch_scalar(cursor, "SELECT COUNT(*) FROM q3_2026_ground_truth")
@@ -122,9 +143,17 @@ def verify_database(connection: object) -> VerificationResult:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--allow-missing-search",
+        action="store_true",
+        help="Treat missing Cortex Search as pending so trial accounts can validate the core live database.",
+    )
+    args = parser.parse_args()
+
     try:
         with connect() as connection:
-            result = verify_database(connection)
+            result = verify_database(connection, allow_missing_search=args.allow_missing_search)
     except Exception as exc:
         print_snowflake_error(exc)
         return 1
@@ -134,7 +163,10 @@ def main() -> int:
         print(f"{status} {check.name}: {check.detail}")
 
     if result.ok:
-        print("Live Snowflake database verification passed.")
+        if args.allow_missing_search:
+            print("Live Snowflake core database verification passed; Cortex Search validation is pending.")
+        else:
+            print("Live Snowflake database verification passed.")
         return 0
     print("Live Snowflake database verification failed.")
     return 1

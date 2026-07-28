@@ -144,10 +144,22 @@ def snowflake_error_guidance(error: Exception) -> str:
             "Snowflake external browser authentication was rejected by the account. Remove "
             "SNOWFLAKE_AUTHENTICATOR and use SNOWFLAKE_PASSWORD, or verify the account supports SSO browser auth."
         )
+    if "incorrect username or password" in lowered or "250001" in lowered:
+        return (
+            "Snowflake rejected the login. Confirm the Snowsight login name is the same as SNOWFLAKE_USER, "
+            "re-enter the password in this PowerShell session with SNOWFLAKE_PASSWORD, or try "
+            "`$env:SNOWFLAKE_AUTHENTICATOR=\"externalbrowser\"` after clearing SNOWFLAKE_PASSWORD."
+        )
     if "warehouse" in lowered and ("does not exist" in lowered or "not authorized" in lowered):
         return (
             "The configured warehouse is missing or not authorized. Confirm SNOWFLAKE_WAREHOUSE and role, "
             "or rerun setup with `--warehouse COMPUTE_WH`."
+        )
+    if "embed_text_768 is not available for trial accounts" in lowered or "399258" in lowered:
+        return (
+            "Cortex Search embeddings are not available for trial accounts. Core tables, procedures, "
+            "approval_documents, and ground truth can still be validated; rerun setup with `--skip-search` "
+            "and verify with `python scripts\\verify_database.py --allow-missing-search`."
         )
     if "cortex search" in lowered:
         return (

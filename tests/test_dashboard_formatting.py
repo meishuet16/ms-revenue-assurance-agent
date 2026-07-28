@@ -1,10 +1,12 @@
 from decimal import Decimal
+import pathlib
 
 from app.config import Settings
 from app.components.flow_map import build_flow_map_html, flow_map_nodes
 from app.components.formatting import format_money, format_status, status_tone
 from app.components.setup_readiness import build_setup_readiness_html, next_command, readiness_items
 from app.components.status_strip import validation_label
+from app.components.theme import THEME_CSS
 from app.services.local_engine import run_q3_golden_investigation
 
 
@@ -31,6 +33,29 @@ def test_flow_map_visualization_uses_case_data_and_workflow_lanes():
     assert "Prepare" in html
     assert "CASE-NOVA-Q3" in html
     assert "Suspected leakage" in html
+
+
+def test_dashboard_tabs_target_current_streamlit_dom():
+    assert 'div[data-testid="stTabs"] div[role="tab"]' in THEME_CSS
+    assert '[data-testid="stTab"][data-selected="true"]' in THEME_CSS
+    assert "white-space: nowrap" in THEME_CSS
+
+
+def test_review_action_inputs_keep_text_visible():
+    assert 'div[data-testid="stTextInput"] input' in THEME_CSS
+    assert 'div[data-testid="stTextArea"] textarea' in THEME_CSS
+    assert "color: var(--ra-ink) !important" in THEME_CSS
+    assert "-webkit-text-fill-color: var(--ra-ink)" in THEME_CSS
+    assert 'div[data-testid="stTextArea"] label p' in THEME_CSS
+
+
+def test_dashboard_hero_reflects_core_snowflake_validation():
+    source = (pathlib.Path(__file__).resolve().parents[1] / "app" / "components" / "theme.py").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Snowflake core verified" in source
+    assert "Snowflake validation pending" not in source
 
 
 def test_validation_label_reflects_dashboard_mode_without_live_connection():

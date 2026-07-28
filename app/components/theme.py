@@ -84,25 +84,47 @@ header[data-testid="stHeader"] {
   height: 0;
 }
 
-div[data-testid="stTabs"] button {
-  border-radius: 6px;
-  color: #475467;
-  font-weight: 700;
-}
-
-div[data-testid="stTabs"] button[aria-selected="true"] {
-  background: #ffffff;
-  color: var(--ra-blue);
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
-}
-
 div[data-testid="stTabs"] div[role="tablist"] {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(216, 224, 230, 0.95);
   border-radius: 8px;
-  padding: 4px;
+  display: flex;
+  padding: 6px;
   gap: 4px;
   margin-bottom: 1.1rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  width: 100%;
+}
+
+div[data-testid="stTabs"] div[role="tab"],
+div[data-testid="stTabs"] [data-testid="stTab"] {
+  align-items: center;
+  border-radius: 6px;
+  color: #344054;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.88rem;
+  font-weight: 850;
+  min-height: 38px;
+  min-width: max-content;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+div[data-testid="stTabs"] div[role="tab"] p,
+div[data-testid="stTabs"] [data-testid="stTab"] p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+}
+
+div[data-testid="stTabs"] div[role="tab"][aria-selected="true"],
+div[data-testid="stTabs"] [data-testid="stTab"][data-selected="true"] {
+  background: #ffffff;
+  color: var(--ra-blue);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
 }
 
 div[data-testid="stMetric"] {
@@ -819,16 +841,33 @@ div[data-testid="stTextArea"] textarea {
   border-radius: 7px;
   border-color: #cdd7e1;
   background: #ffffff;
+  color: var(--ra-ink) !important;
+  -webkit-text-fill-color: var(--ra-ink);
+  caret-color: var(--ra-blue);
+}
+
+div[data-testid="stTextInput"] input::placeholder,
+div[data-testid="stTextArea"] textarea::placeholder {
+  color: #98a2b3 !important;
+  -webkit-text-fill-color: #98a2b3;
 }
 
 div[data-testid="stTextInput"] label,
 div[data-testid="stTextArea"] label,
 div[data-testid="stSelectbox"] label {
-  color: var(--ra-muted);
+  color: #344054 !important;
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+div[data-testid="stTextInput"] label p,
+div[data-testid="stTextArea"] label p,
+div[data-testid="stSelectbox"] label p {
+  color: inherit !important;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 div[data-testid="stDataFrame"] {
@@ -922,6 +961,19 @@ div[data-testid="stDataFrame"] {
   .ra-readiness code {
     width: 100%;
   }
+
+  div[data-testid="stTabs"] div[role="tablist"] {
+    gap: 6px;
+    margin-left: -2px;
+    padding: 6px;
+  }
+
+  div[data-testid="stTabs"] div[role="tab"],
+  div[data-testid="stTabs"] [data-testid="stTab"] {
+    font-size: 0.86rem;
+    min-width: 92px;
+    justify-content: center;
+  }
 }
 </style>
 """
@@ -941,7 +993,7 @@ def render_hero(title: str, copy: str, eyebrow: str = "Revenue Assurance") -> No
           <div class="ra-hero__chips">
             <span>Q3 2026 review</span>
             <span>Offline synthetic fixtures</span>
-            <span>Snowflake validation pending</span>
+            <span>Snowflake core verified</span>
           </div>
         </div>
         """,

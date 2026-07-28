@@ -12,8 +12,8 @@ RETURNS TABLE (
 LANGUAGE SQL
 AS
 $$
-BEGIN
-    RETURN TABLE (
+DECLARE
+    pricing_rows RESULTSET DEFAULT (
         SELECT pt.term_id, c.customer_id, pt.term_type, pt.value,
                pt.effective_start_date, pt.effective_end_date,
                pt.approval_status, pt.source_document_id
@@ -23,6 +23,7 @@ BEGIN
           AND pt.effective_start_date <= :period_end
           AND COALESCE(pt.effective_end_date, '2999-12-31'::DATE) >= :period_start
     );
+BEGIN
+    RETURN TABLE(pricing_rows);
 END;
 $$;
-

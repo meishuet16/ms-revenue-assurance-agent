@@ -43,9 +43,9 @@ The agent does **not** create invoices, update ledgers, contact customers, trigg
 
 ## Live Validation Status
 
-Environment-independent components are implemented and tested. The setup and verification scripts can now connect to Snowflake when credentials are provided through local environment variables.
+Environment-independent components are implemented and tested. The setup and verification scripts have connected to Snowflake and validated the core live database path: tables, procedures, approval document fixtures, and Q3 ground truth.
 
-Live Snowflake execution must still be run from a configured account. Cortex Code execution is separate from the connector-based scripts and may require account entitlement or usage-limit access.
+Cortex Search service creation is pending in the current Snowflake trial account because Snowflake reports `AI function EMBED_TEXT_768 is not available for trial accounts`. Cortex Code execution is separate from the connector-based scripts and may require account entitlement or usage-limit access.
 
 ## Setup
 
@@ -92,6 +92,13 @@ python scripts/verify_database.py
 
 The setup script creates the configured warehouse if needed, executes `sql/` files in dependency order, loads synthetic approval documents, and creates the Cortex Search service unless `--skip-search` is passed.
 
+Snowflake trial accounts may report `AI function EMBED_TEXT_768 is not available for trial accounts` when creating Cortex Search. In that case, validate the core live database and mark Cortex Search as pending:
+
+```bash
+python scripts/setup_project.py --warehouse COMPUTE_WH --skip-search
+python scripts/verify_database.py --allow-missing-search
+```
+
 ## CoCo CLI Demo
 
 Expected command after CoCo CLI is installed and configured:
@@ -100,7 +107,7 @@ Expected command after CoCo CLI is installed and configured:
 cortex -c hackathon -w . -f prompts/run_q3_investigation.md
 ```
 
-Use this as the primary live workflow demo only after the local CoCo CLI profile and Snowflake account are validated. Until then, use the deterministic offline verification and Streamlit fixture mode for a reproducible demo.
+Use this as the primary live workflow demo only after the local CoCo CLI profile is available. If Cortex Code usage or entitlement blocks execution, use the implemented prompt and skills plus the validated Snowflake core database and Streamlit fixture dashboard.
 
 ## Streamlit
 
@@ -122,7 +129,7 @@ Unix helper:
 bash scripts/run_dashboard.sh
 ```
 
-Dashboard fixture mode is the default, even when Snowflake credentials are present. Set `SNOWFLAKE_DASHBOARD_MODE=live` only after live Snowflake validation passes.
+Dashboard fixture mode is the default, even when Snowflake credentials are present. Keep fixture mode for the deterministic demo unless live dashboard reads are explicitly enabled and verified.
 
 The offline dashboard has been browser-checked locally at `http://localhost:8501`. It displays Summary, Case Queue, and Evidence Trail tabs from deterministic synthetic fixtures.
 
@@ -148,15 +155,15 @@ Use `docs/demo-script.md` for the presenter sequence. The short path is:
 1. Run `python scripts/run_tests.py`.
 2. Run `python scripts/run_evaluation.py`.
 3. Launch `streamlit run app/app.py`.
-4. Walk through Summary, Case Queue, and Evidence Trail using offline fixtures.
-5. State that live Snowflake and CoCo CLI validation are pending configured account access.
+4. Walk through Summary, Case Queue, Evidence Trail, and Flow Map using offline fixtures.
+5. State that Snowflake core validation passed, Cortex Search is pending on the trial account, and CoCo CLI execution depends on local account entitlement.
 
 Supporting docs:
 
 - `docs/architecture.md` explains the CoCo CLI, Snowflake SQL, Cortex Search, and Streamlit boundaries.
 - `docs/evaluation-plan.md` describes the synthetic evaluation cases and metrics.
 - `docs/evaluation-report.md` records the current offline deterministic evaluation result.
-- `docs/known-limitations.md` lists MVP scope and pending live validation.
+- `docs/known-limitations.md` lists MVP scope and live validation boundaries.
 - `docs/dataset-declaration.md` confirms the dataset is fully synthetic.
 
 ## Safety Boundary

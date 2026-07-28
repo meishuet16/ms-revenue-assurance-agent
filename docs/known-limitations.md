@@ -22,6 +22,10 @@ The MVP does not support:
 - payment action;
 - legal determination of recoverability.
 
-Live Snowflake validation is pending configured account access. That includes warehouse and role validation, SQL setup execution, Cortex Search service creation, and CoCo CLI end-to-end execution.
+Live Snowflake core validation has passed for warehouse access, role access, SQL setup execution, approval document fixture loading, stored procedures, and Q3 ground truth verification.
+
+Cortex Search service creation remains pending in the current Snowflake trial account because the account reports `AI function EMBED_TEXT_768 is not available for trial accounts`.
+
+CoCo CLI end-to-end execution remains dependent on local Cortex Code account entitlement and usage limits.
 
 The offline deterministic engine, tests, evaluation script, and Streamlit fixture-mode dashboard are available without Snowflake credentials.

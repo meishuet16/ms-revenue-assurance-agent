@@ -13,14 +13,15 @@ RETURNS TABLE (
 LANGUAGE SQL
 AS
 $$
-BEGIN
-    RETURN TABLE (
+DECLARE
+    exception_rows RESULTSET DEFAULT (
         SELECT *
         FROM commercial_exceptions
         WHERE customer_id = :customer_id
           AND effective_start_date <= :period_end
           AND effective_end_date >= :period_start
     );
+BEGIN
+    RETURN TABLE(exception_rows);
 END;
 $$;
-

@@ -62,10 +62,16 @@ def test_snowflake_error_guidance_classifies_common_connection_failures():
     host_error = RuntimeError("404 Not Found: post CW23947.snowflakecomputing.com:443/session/authenticator-request")
     saml_error = RuntimeError("390190 SAML Identity Provider account parameter")
     missing_error = SnowflakeUnavailable("Snowflake credentials are not configured")
+    password_error = RuntimeError("250001 (08001): Incorrect username or password was specified.")
+    trial_search_error = RuntimeError("399258 (0A000): AI function EMBED_TEXT_768 is not available for trial accounts.")
 
     assert "account identifier" in setup_project.snowflake_error_guidance(host_error)
     assert "SNOWFLAKE_AUTHENTICATOR" in setup_project.snowflake_error_guidance(saml_error)
     assert "validate_environment.py" in setup_project.snowflake_error_guidance(missing_error)
+    assert "password" in setup_project.snowflake_error_guidance(password_error)
+    assert "externalbrowser" in setup_project.snowflake_error_guidance(password_error)
+    assert "trial accounts" in setup_project.snowflake_error_guidance(trial_search_error)
+    assert "--skip-search" in setup_project.snowflake_error_guidance(trial_search_error)
 
 
 def test_run_live_setup_returns_failure_without_traceback_when_connection_fails():
@@ -135,6 +141,21 @@ $$;
     assert statements[1].endswith("$$")
 
 
+def test_table_returning_sql_procedures_use_resultset_return_pattern():
+    root = pathlib.Path(__file__).resolve().parents[1]
+
+    for name in [
+        "005_scan_billing_variances.sql",
+        "006_get_pricing_evidence.sql",
+        "007_get_commercial_exceptions.sql",
+    ]:
+        source = (root / "sql" / name).read_text(encoding="utf-8")
+        assert "RESULTSET DEFAULT" in source
+        assert "RETURN TABLE(" in source
+        assert "RETURN TABLE (\n        SELECT" not in source
+        assert "RETURN TABLE (\n        WITH" not in source
+
+
 def test_safe_identifier_rejects_unsafe_warehouse_names():
     assert setup_project.quote_identifier("COMPUTE_WH") == "COMPUTE_WH"
 
@@ -163,8 +184,9 @@ def test_search_sql_uses_configured_warehouse():
 
 
 class FakeCursor:
-    def __init__(self):
+    def __init__(self, search_exists: bool = True):
         self.executed: list[str] = []
+        self.search_exists = search_exists
 
     def execute(self, sql: str):
         self.executed.append(sql)
@@ -172,6 +194,8 @@ class FakeCursor:
 
     def fetchone(self):
         sql = self.executed[-1]
+        if "SHOW CORTEX SEARCH SERVICES" in sql:
+            return (1,) if self.search_exists else None
         if "COUNT(*) FROM q3_2026_ground_truth" in sql:
             return (4,)
         if "SUM(amount)" in sql:
@@ -186,8 +210,8 @@ class FakeCursor:
 
 
 class FakeConnection:
-    def __init__(self):
-        self.cursor_instance = FakeCursor()
+    def __init__(self, search_exists: bool = True):
+        self.cursor_instance = FakeCursor(search_exists=search_exists)
 
     def cursor(self):
         return self.cursor_instance
@@ -218,3 +242,16 @@ def test_verify_database_reports_required_object_checks():
     assert result.ok
     assert any(check.name == "ground truth row count" for check in result.checks)
     assert any("SHOW CORTEX SEARCH SERVICES" in sql for sql in connection.cursor_instance.executed)
+
+
+def test_verify_database_can_allow_missing_cortex_search_for_trial_accounts():
+    connection = FakeConnection(search_exists=False)
+
+    strict_result = verify_database.verify_database(connection)
+    allowed_result = verify_database.verify_database(connection, allow_missing_search=True)
+
+    assert not strict_result.ok
+    assert allowed_result.ok
+    search_check = next(check for check in allowed_result.checks if check.name == "cortex search search_approval_documents")
+    assert search_check.ok
+    assert "pending" in search_check.detail

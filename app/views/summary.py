@@ -25,7 +25,7 @@ def render() -> None:
     render_setup_readiness()
     render_outcome_mix(summary)
     st.markdown(
-        '<div class="ra-note">Live Snowflake validation is pending. Offline mode uses deterministic synthetic fixtures.</div>',
+        '<div class="ra-note">Dashboard fixture mode is deterministic. Snowflake core validation has passed; Cortex Search is pending on the trial account.</div>',
         unsafe_allow_html=True,
     )
     render_section_header("Q3 2026 Decision Branches", "Case outcomes")

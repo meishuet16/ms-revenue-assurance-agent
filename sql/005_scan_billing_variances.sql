@@ -12,8 +12,8 @@ RETURNS TABLE (
 LANGUAGE SQL
 AS
 $$
-BEGIN
-    RETURN TABLE (
+DECLARE
+    variance_rows RESULTSET DEFAULT (
         WITH monthly_expected AS (
             SELECT c.customer_id, i.billing_period_start, i.billing_period_end,
                    MAX(pt.value) AS expected_amount,
@@ -62,6 +62,7 @@ BEGIN
         UNION ALL
         SELECT * FROM usage_conflicts
     );
+BEGIN
+    RETURN TABLE(variance_rows);
 END;
 $$;
-
