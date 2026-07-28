@@ -17,15 +17,20 @@ def connect() -> Iterator[object]:
         raise SnowflakeUnavailable("Snowflake credentials are not configured; using offline fixture mode.")
     import snowflake.connector
 
-    connection = snowflake.connector.connect(
-        account=settings.account,
-        user=settings.user,
-        password=settings.password,
-        role=settings.role,
-        warehouse=settings.warehouse,
-        database=settings.database,
-        schema=settings.schema,
-    )
+    connection_args = {
+        "account": settings.account,
+        "user": settings.user,
+        "role": settings.role,
+        "warehouse": settings.warehouse,
+        "database": settings.database,
+        "schema": settings.schema,
+    }
+    if settings.authenticator:
+        connection_args["authenticator"] = settings.authenticator
+    if settings.password:
+        connection_args["password"] = settings.password
+
+    connection = snowflake.connector.connect(**connection_args)
     try:
         yield connection
     finally:
@@ -40,4 +45,3 @@ def fetch_cases() -> list[InvestigationCase]:
 
 def fetch_summary():
     return run_q3_golden_investigation().summary
-

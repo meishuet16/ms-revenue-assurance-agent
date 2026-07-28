@@ -3,7 +3,39 @@ from __future__ import annotations
 import pathlib
 import tempfile
 
+from app.config import Settings
 from scripts import setup_project, verify_database
+from scripts.validate_environment import missing_environment_variables
+
+
+def test_externalbrowser_settings_do_not_require_password_and_trim_values():
+    settings = Settings.from_env(
+        {
+            "SNOWFLAKE_ACCOUNT": "CW23947 ",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_AUTHENTICATOR": "externalbrowser",
+            "SNOWFLAKE_WAREHOUSE": "COMPUTE_WH",
+        }
+    )
+
+    assert settings.account == "CW23947"
+    assert settings.authenticator == "externalbrowser"
+    assert settings.has_snowflake_credentials
+
+
+def test_validate_environment_accepts_externalbrowser_without_password():
+    missing = missing_environment_variables(
+        {
+            "SNOWFLAKE_ACCOUNT": "CW23947 ",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_AUTHENTICATOR": "externalbrowser",
+            "SNOWFLAKE_WAREHOUSE": "COMPUTE_WH",
+            "SNOWFLAKE_DATABASE": "REVENUE_ASSURANCE",
+            "SNOWFLAKE_SCHEMA": "PUBLIC",
+        }
+    )
+
+    assert missing == []
 
 
 def test_split_sql_statements_preserves_procedure_body_semicolons():
