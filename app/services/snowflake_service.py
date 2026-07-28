@@ -38,7 +38,7 @@ def connect() -> Iterator[object]:
 
 
 def fetch_cases() -> list[InvestigationCase]:
-    if not settings.has_snowflake_credentials:
+    if not settings.live_dashboard_requested:
         return list(run_q3_golden_investigation().cases)
     raise SnowflakeUnavailable("Live Snowflake fetch is pending account validation.")
 

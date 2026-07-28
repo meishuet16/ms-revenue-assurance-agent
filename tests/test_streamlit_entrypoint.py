@@ -1,27 +1,33 @@
 from __future__ import annotations
 
+import ast
 import pathlib
-import sys
-import importlib.util
 
 
-def test_streamlit_entrypoint_imports_without_package_shadowing():
+def test_streamlit_entrypoint_removes_local_app_directory_before_importing_package():
     root = pathlib.Path(__file__).resolve().parents[1]
     entrypoint = root / "app" / "app.py"
-    spec = importlib.util.spec_from_file_location("app", entrypoint)
+    source = entrypoint.read_text(encoding="utf-8")
 
-    assert spec is not None
-    assert spec.loader is not None
+    tree = ast.parse(source)
+    calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)]
 
-    previous_app = sys.modules.pop("app", None)
-    previous_path = list(sys.path)
-    sys.path.insert(0, str(entrypoint.parent))
-    module = importlib.util.module_from_spec(spec)
-    sys.modules["app"] = module
-    try:
-        spec.loader.exec_module(module)
-    finally:
-        sys.path[:] = previous_path
-        sys.modules.pop("app", None)
-        if previous_app is not None:
-            sys.modules["app"] = previous_app
+    assert "APP_DIR = pathlib.Path(__file__).resolve().parent" in source
+    assert "pathlib.Path(path or \".\").resolve() != APP_DIR" in source
+    assert "sys.path.insert(0, str(ROOT))" in source
+    assert any(
+        isinstance(call.func, ast.Attribute)
+        and call.func.attr == "pop"
+        and call.args
+        and isinstance(call.args[0], ast.Constant)
+        and call.args[0].value == "app"
+        for call in calls
+    )
+
+
+def test_streamlit_entrypoint_wires_expected_dashboard_tabs():
+    root = pathlib.Path(__file__).resolve().parents[1]
+    entrypoint = root / "app" / "app.py"
+    source = entrypoint.read_text(encoding="utf-8")
+
+    assert 'st.tabs(["Summary", "Case Queue", "Evidence Trail"])' in source

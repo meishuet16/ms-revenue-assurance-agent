@@ -4,6 +4,7 @@ import pathlib
 import tempfile
 
 from app.config import Settings
+from app.services import snowflake_service
 from scripts import setup_project, verify_database
 from scripts.validate_environment import missing_environment_variables
 
@@ -36,6 +37,41 @@ def test_validate_environment_accepts_externalbrowser_without_password():
     )
 
     assert missing == []
+
+
+def test_dashboard_uses_offline_fixtures_when_credentials_exist_without_live_mode():
+    previous_settings = snowflake_service.settings
+    snowflake_service.settings = Settings.from_env(
+        {
+            "SNOWFLAKE_ACCOUNT": "CIZUPDQ-NV95442",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_PASSWORD": "secret",
+            "SNOWFLAKE_WAREHOUSE": "COMPUTE_WH",
+            "SNOWFLAKE_DATABASE": "REVENUE_ASSURANCE",
+            "SNOWFLAKE_SCHEMA": "PUBLIC",
+        }
+    )
+    try:
+        cases = snowflake_service.fetch_cases()
+    finally:
+        snowflake_service.settings = previous_settings
+
+    assert len(cases) == 4
+    assert cases[0].case_id == "CASE-NOVA-Q3"
+
+
+def test_dashboard_live_mode_requires_explicit_opt_in():
+    settings = Settings.from_env(
+        {
+            "SNOWFLAKE_ACCOUNT": "CIZUPDQ-NV95442",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_PASSWORD": "secret",
+            "SNOWFLAKE_DASHBOARD_MODE": "live",
+        }
+    )
+
+    assert settings.dashboard_mode == "live"
+    assert settings.live_dashboard_requested
 
 
 def test_split_sql_statements_preserves_procedure_body_semicolons():

@@ -22,6 +22,7 @@ class Settings:
     warehouse: str = "RA_WH"
     database: str = "REVENUE_ASSURANCE"
     schema: str = "PUBLIC"
+    dashboard_mode: str = "fixture"
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] = os.environ) -> "Settings":
@@ -34,12 +35,17 @@ class Settings:
             warehouse=_clean(env.get("SNOWFLAKE_WAREHOUSE"), "RA_WH") or "RA_WH",
             database=_clean(env.get("SNOWFLAKE_DATABASE"), "REVENUE_ASSURANCE") or "REVENUE_ASSURANCE",
             schema=_clean(env.get("SNOWFLAKE_SCHEMA"), "PUBLIC") or "PUBLIC",
+            dashboard_mode=(_clean(env.get("SNOWFLAKE_DASHBOARD_MODE"), "fixture") or "fixture").lower(),
         )
 
     @property
     def has_snowflake_credentials(self) -> bool:
         has_browser_auth = self.authenticator == "externalbrowser"
         return bool(self.account and self.user and (self.password or has_browser_auth))
+
+    @property
+    def live_dashboard_requested(self) -> bool:
+        return self.dashboard_mode == "live"
 
 
 settings = Settings.from_env()
