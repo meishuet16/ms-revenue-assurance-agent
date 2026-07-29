@@ -140,6 +140,16 @@ Dashboard views:
 - Evidence Trail: selected case detail, audit timeline, agent classification, and recommended human action.
 - Flow Map: visual investigation path from variance detection through evidence validation to finance review outcome.
 
+## Deploy
+
+The repo includes a Render Blueprint for a public fixture-mode dashboard:
+
+```text
+https://dashboard.render.com/blueprints/new?repo=https://github.com/meishuet16/ms-revenue-assurance-agent
+```
+
+After Render creates the service, use the generated `.onrender.com` URL as the prototype deployment link. See `docs/deployment.md` for deployment notes and the live Snowflake validation boundary.
+
 ## Expected Q3 Summary
 
 - Gross variance detected: `$16,000`

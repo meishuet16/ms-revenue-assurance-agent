@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ms-revenue-assurance-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: SNOWFLAKE_DASHBOARD_MODE
+        value: fixture
