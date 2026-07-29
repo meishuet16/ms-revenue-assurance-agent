@@ -27,6 +27,7 @@ SQL_ORDER = [
     "010_review_actions.sql",
     "011_run_audit.sql",
     "012_ground_truth.sql",
+    "013_materialize_demo_cases.sql",
 ]
 
 SEARCH_SQL_ORDER = [

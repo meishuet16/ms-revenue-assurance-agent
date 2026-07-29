@@ -134,6 +134,18 @@ def verify_database(connection: object, allow_missing_search: bool = False) -> V
             checks.append(Check("ground truth row count", False, f"query failed: {exc}"))
 
         try:
+            case_count = fetch_scalar(cursor, "SELECT COUNT(*) FROM investigation_cases")
+            checks.append(Check("investigation case row count", case_count == 4, f"{case_count} rows"))
+        except Exception as exc:
+            checks.append(Check("investigation case row count", False, f"query failed: {exc}"))
+
+        try:
+            evidence_count = fetch_scalar(cursor, "SELECT COUNT(*) FROM case_evidence")
+            checks.append(Check("case evidence row count", int(evidence_count or 0) >= 8, f"{evidence_count} rows"))
+        except Exception as exc:
+            checks.append(Check("case evidence row count", False, f"query failed: {exc}"))
+
+        try:
             amount = fetch_scalar(cursor, "SELECT SUM(amount) FROM q3_2026_ground_truth")
             checks.append(Check("ground truth total variance", float(amount or 0) == 16000.0, f"{amount} total"))
         except Exception as exc:

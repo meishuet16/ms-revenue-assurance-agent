@@ -142,13 +142,13 @@ Dashboard views:
 
 ## Deploy
 
-The repo includes a Render Blueprint for a public fixture-mode dashboard:
+The repo includes a Render Blueprint for a public Streamlit dashboard. It runs in live mode when Snowflake environment variables are supplied in Render:
 
 ```text
 https://dashboard.render.com/blueprints/new?repo=https://github.com/meishuet16/ms-revenue-assurance-agent
 ```
 
-After Render creates the service, use the generated `.onrender.com` URL as the prototype deployment link. See `docs/deployment.md` for deployment notes and the live Snowflake validation boundary.
+After Render creates the service, use the generated `.onrender.com` URL as the prototype deployment link. Switch modes with `SNOWFLAKE_DASHBOARD_MODE=live` or `SNOWFLAKE_DASHBOARD_MODE=fixture`; see `docs/deployment.md` for the required Render environment variables.
 
 ## Expected Q3 Summary
 

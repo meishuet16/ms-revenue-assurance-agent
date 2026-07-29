@@ -7,4 +7,18 @@ services:
     startCommand: streamlit run app/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
     envVars:
       - key: SNOWFLAKE_DASHBOARD_MODE
-        value: fixture
+        value: live
+      - key: SNOWFLAKE_ACCOUNT
+        sync: false
+      - key: SNOWFLAKE_USER
+        sync: false
+      - key: SNOWFLAKE_PASSWORD
+        sync: false
+      - key: SNOWFLAKE_ROLE
+        value: ACCOUNTADMIN
+      - key: SNOWFLAKE_WAREHOUSE
+        value: COMPUTE_WH
+      - key: SNOWFLAKE_DATABASE
+        value: REVENUE_ASSURANCE
+      - key: SNOWFLAKE_SCHEMA
+        value: PUBLIC

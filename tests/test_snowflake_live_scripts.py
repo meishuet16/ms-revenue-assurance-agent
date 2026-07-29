@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import pathlib
 import tempfile
+from contextlib import contextmanager
 
 from app.config import Settings
-from app.services import snowflake_service
+from app.services import review_service, snowflake_service
 from app.services.snowflake_service import SnowflakeUnavailable
 from scripts import setup_project, verify_database
 from scripts.validate_environment import describe_environment, missing_environment_variables
@@ -118,6 +119,131 @@ def test_dashboard_live_mode_requires_explicit_opt_in():
     assert settings.live_dashboard_requested
 
 
+class FakeLiveCursor:
+    def __init__(self):
+        self.executed: list[tuple[str, object | None]] = []
+        self._rows: list[tuple[object, ...]] = []
+        self._single_row: tuple[object, ...] | None = None
+
+    def execute(self, sql: str, params: object | None = None):
+        self.executed.append((sql, params))
+        if "FROM investigation_cases" in sql:
+            self._rows = [
+                (
+                    "CASE-NOVA-Q3",
+                    "CUST-NOVA",
+                    "Nova Retail",
+                    "suspected_leakage",
+                    "full_period",
+                    "2026-07-01",
+                    "2026-09-30",
+                    9000,
+                    0,
+                    9000,
+                    "high",
+                    "Approved pricing was not reflected in invoices.",
+                    "Review for billing correction.",
+                    "Q3 2026",
+                    "2026-07-01",
+                    "2026-09-30",
+                    "pending",
+                    "CUST-NOVA|2026-07-01|2026-09-30",
+                )
+            ]
+        elif "FROM case_evidence" in sql:
+            self._rows = [
+                ("CASE-NOVA-Q3", "pricing_term", "PT-0142", "Approved monthly fee.", "get_pricing_evidence")
+            ]
+        elif sql.startswith("CALL update_case_review_status"):
+            self._single_row = ("CASE-NOVA-Q3",)
+        return self
+
+    def fetchall(self):
+        return self._rows
+
+    def fetchone(self):
+        return self._single_row
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+
+class FakeLiveConnection:
+    def __init__(self):
+        self.cursor_instance = FakeLiveCursor()
+
+    def cursor(self):
+        return self.cursor_instance
+
+
+@contextmanager
+def fake_live_connect(connection: FakeLiveConnection):
+    yield connection
+
+
+def test_dashboard_live_mode_reads_cases_and_summary_from_snowflake():
+    previous_settings = snowflake_service.settings
+    previous_connect = snowflake_service.connect
+    connection = FakeLiveConnection()
+    snowflake_service.settings = Settings.from_env(
+        {
+            "SNOWFLAKE_ACCOUNT": "CIZUPDQ-NV95442",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_PASSWORD": "secret",
+            "SNOWFLAKE_DASHBOARD_MODE": "live",
+        }
+    )
+    snowflake_service.connect = lambda: fake_live_connect(connection)
+    try:
+        cases = snowflake_service.fetch_cases()
+        summary = snowflake_service.fetch_summary()
+    finally:
+        snowflake_service.settings = previous_settings
+        snowflake_service.connect = previous_connect
+
+    assert cases[0].case_id == "CASE-NOVA-Q3"
+    assert cases[0].customer_name == "Nova Retail"
+    assert cases[0].evidence[0].evidence_id == "PT-0142"
+    assert summary.suspected_leakage == 9000
+    assert any("FROM investigation_cases" in sql for sql, _ in connection.cursor_instance.executed)
+
+
+def test_live_review_action_calls_snowflake_review_procedure():
+    previous_settings = review_service.settings
+    previous_connect = review_service.connect
+    connection = FakeLiveConnection()
+    review_service.settings = Settings.from_env(
+        {
+            "SNOWFLAKE_ACCOUNT": "CIZUPDQ-NV95442",
+            "SNOWFLAKE_USER": "MEISHUET",
+            "SNOWFLAKE_PASSWORD": "secret",
+            "SNOWFLAKE_DASHBOARD_MODE": "live",
+        }
+    )
+    review_service.connect = lambda: fake_live_connect(connection)
+    try:
+        message = review_service.update_review_status(
+            "CASE-NOVA-Q3",
+            "assigned",
+            "finance@example.com",
+            "Please review.",
+        )
+    finally:
+        review_service.settings = previous_settings
+        review_service.connect = previous_connect
+
+    assert "Updated Snowflake review state" in message
+    assert connection.cursor_instance.executed[-1][1] == (
+        "CASE-NOVA-Q3",
+        "assigned",
+        "finance@example.com",
+        "Please review.",
+    )
+
+
 def test_split_sql_statements_preserves_procedure_body_semicolons():
     sql = """
 CREATE TABLE demo (id STRING);
@@ -173,8 +299,21 @@ def test_project_sql_files_include_search_after_core_sql():
     paths = setup_project.project_sql_paths(root, include_search=True)
 
     assert paths[0].name == "001_database_setup.sql"
+    assert "013_materialize_demo_cases.sql" in [path.name for path in paths]
+    assert paths[-3].name == "013_materialize_demo_cases.sql"
     assert paths[-2].name == "upload_documents.sql"
     assert paths[-1].name == "setup_search_service.sql"
+
+
+def test_render_blueprint_supports_live_mode_without_committed_secrets():
+    root = pathlib.Path(__file__).resolve().parents[1]
+    source = (root / "render.yaml").read_text(encoding="utf-8")
+
+    assert "SNOWFLAKE_DASHBOARD_MODE" in source
+    assert "value: live" in source
+    assert "SNOWFLAKE_PASSWORD" in source
+    assert "sync: false" in source
+    assert "CIZUPDQ" not in source
 
 
 def test_search_sql_uses_configured_warehouse():
@@ -198,6 +337,10 @@ class FakeCursor:
             return (1,) if self.search_exists else None
         if "COUNT(*) FROM q3_2026_ground_truth" in sql:
             return (4,)
+        if "COUNT(*) FROM investigation_cases" in sql:
+            return (4,)
+        if "COUNT(*) FROM case_evidence" in sql:
+            return (9,)
         if "SUM(amount)" in sql:
             return (16000,)
         return (1,)
@@ -241,6 +384,8 @@ def test_verify_database_reports_required_object_checks():
 
     assert result.ok
     assert any(check.name == "ground truth row count" for check in result.checks)
+    assert any(check.name == "investigation case row count" for check in result.checks)
+    assert any(check.name == "case evidence row count" for check in result.checks)
     assert any("SHOW CORTEX SEARCH SERVICES" in sql for sql in connection.cursor_instance.executed)
 
 
