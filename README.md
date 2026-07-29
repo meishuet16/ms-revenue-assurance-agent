@@ -148,7 +148,7 @@ The repo includes a Render Blueprint for a public Streamlit dashboard. It runs i
 https://dashboard.render.com/blueprints/new?repo=https://github.com/meishuet16/ms-revenue-assurance-agent
 ```
 
-After Render creates the service, use the generated `.onrender.com` URL as the prototype deployment link. Switch modes with `SNOWFLAKE_DASHBOARD_MODE=live` or `SNOWFLAKE_DASHBOARD_MODE=fixture`; see `docs/deployment.md` for the required Render environment variables.
+After Render creates the service, use the generated `.onrender.com` URL as the prototype deployment link. Switch modes with `SNOWFLAKE_DASHBOARD_MODE=live` or `SNOWFLAKE_DASHBOARD_MODE=fixture`; see `docs/deployment.md` for the required Render environment variables. Local PowerShell `$env:...` values are session-only, while Render environment variables persist across redeploys.
 
 ## Expected Q3 Summary
 

@@ -78,6 +78,14 @@ In Render:
 
 The public `.onrender.com` URL stays the same after switching modes.
 
+## Environment Variable Persistence
+
+PowerShell `$env:...` values only live inside the current terminal session. If you close that terminal, open a new one, or run commands from another shell, set the Snowflake variables again before running local live commands.
+
+Render environment variables are persistent. After you add the Snowflake variables in the Render dashboard, the deployed app keeps using them on every redeploy until you change or remove them.
+
+Do not commit Snowflake passwords to GitHub. Use Render's private environment variables for deployed live mode.
+
 ## Local Demo Command
 
 ```powershell

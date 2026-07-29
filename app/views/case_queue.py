@@ -6,8 +6,16 @@ from app.components.case_table import render_case_table
 from app.components.case_detail import render_case_detail
 from app.components.case_list import render_case_list
 from app.components.section import render_section_header
+from app.config import settings
 from app.services.review_service import update_review_status
 from app.services.snowflake_service import fetch_cases
+
+
+def _submit_review_action(case_id: str, review_status: str, reviewed_by: str, comment: str) -> None:
+    with st.spinner("Updating review status..."):
+        st.session_state["review_action_message"] = update_review_status(case_id, review_status, reviewed_by, comment)
+    if settings.live_dashboard_requested:
+        st.rerun()
 
 
 def render() -> None:
@@ -38,10 +46,12 @@ def render() -> None:
         )
         reviewed_by = st.text_input("Reviewer", value="finance.reviewer@example.com")
         comment = st.text_area("Review comment", value="Offline review note.")
+        if "review_action_message" in st.session_state:
+            st.success(st.session_state["review_action_message"])
         cols = st.columns(3)
         if cols[0].button("Accept finding"):
-            st.success(update_review_status(selected.case_id or "", "accepted_for_billing_review", reviewed_by, comment))
+            _submit_review_action(selected.case_id or "", "accepted_for_billing_review", reviewed_by, comment)
         if cols[1].button("Dismiss"):
-            st.success(update_review_status(selected.case_id or "", "dismissed", reviewed_by, comment))
+            _submit_review_action(selected.case_id or "", "dismissed", reviewed_by, comment)
         if cols[2].button("Assign"):
-            st.success(update_review_status(selected.case_id or "", "assigned", reviewed_by, comment))
+            _submit_review_action(selected.case_id or "", "assigned", reviewed_by, comment)

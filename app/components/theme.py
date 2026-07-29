@@ -992,7 +992,7 @@ def render_hero(title: str, copy: str, eyebrow: str = "Revenue Assurance") -> No
           <div class="ra-hero__copy">{copy}</div>
           <div class="ra-hero__chips">
             <span>Q3 2026 review</span>
-            <span>Offline synthetic fixtures</span>
+            <span>Finance review workbench</span>
             <span>Snowflake core verified</span>
           </div>
         </div>

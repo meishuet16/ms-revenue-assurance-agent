@@ -56,6 +56,18 @@ def test_dashboard_hero_reflects_core_snowflake_validation():
 
     assert "Snowflake core verified" in source
     assert "Snowflake validation pending" not in source
+    assert "Finance review workbench" in source
+    assert "Offline synthetic fixtures" not in source
+
+
+def test_review_action_ui_shows_loading_and_refreshes_live_state():
+    source = (pathlib.Path(__file__).resolve().parents[1] / "app" / "views" / "case_queue.py").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'st.spinner("Updating review status...")' in source
+    assert 'st.session_state["review_action_message"]' in source
+    assert "st.rerun()" in source
 
 
 def test_validation_label_reflects_dashboard_mode_without_live_connection():
