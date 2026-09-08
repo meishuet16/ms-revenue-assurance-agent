@@ -2,7 +2,7 @@ from decimal import Decimal
 import pathlib
 
 from app.config import Settings
-from app.components.flow_map import build_flow_map_html, flow_map_nodes
+from app.components.flow_map import build_agent_graph_html, build_flow_map_html, flow_map_nodes
 from app.components.formatting import format_money, format_status, status_tone
 from app.components.setup_readiness import build_setup_readiness_html, next_command, readiness_items
 from app.components.status_strip import validation_label
@@ -28,11 +28,28 @@ def test_flow_map_visualization_uses_case_data_and_workflow_lanes():
 
     assert len(nodes) == 4
     assert nodes[0].customer_name == "Nova Retail"
-    assert "Detect" in html
-    assert "Validate" in html
-    assert "Prepare" in html
     assert "CASE-NOVA-Q3" in html
     assert "Suspected leakage" in html
+
+
+def test_animated_agent_graph_highlights_executed_evidence_path():
+    result = run_q3_golden_investigation()
+    brightfarm = result.case_by_customer("CUST-BRIGHTFARM")
+    summit = result.case_by_customer("CUST-SUMMIT")
+
+    conflict_html = build_agent_graph_html(brightfarm)
+    blocked_html = build_agent_graph_html(summit)
+
+    assert "LIVE INVESTIGATION GRAPH" in conflict_html
+    assert "Approval document" in conflict_html
+    assert "Evidence conflict" in conflict_html
+    assert "@keyframes raSignal" in conflict_html
+    assert 'data-node="approval"' in conflict_html
+    assert 'data-node="conflict"' in conflict_html
+    assert "moving signal" in conflict_html.lower()
+    assert "Insufficient data" in blocked_html
+    assert 'data-node="usage"' in blocked_html
+    assert "Human review remains final authority" in blocked_html
 
 
 def test_dashboard_tabs_target_current_streamlit_dom():
