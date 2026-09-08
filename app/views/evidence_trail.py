@@ -13,18 +13,37 @@ from app.services.snowflake_service import fetch_cases
 
 
 def render() -> None:
-    render_section_header("Evidence Trail", "Investigation record", "See what the investigator checked, why its path changed, the evidence it used, and where human review begins.")
+    render_section_header(
+        "Evidence Trail",
+        "Investigation record",
+        "See what the investigator checked, why its path changed, the evidence it used, and where human review begins.",
+    )
     cases = fetch_cases()
     selected = st.selectbox("Case", cases, format_func=lambda case: f"{case.customer_name} - {case.case_id}")
     render_evidence_summary(selected)
-    left, right = st.columns([1.1, 1])
+
+    render_section_header("Investigation Console", "Executed decision path")
+    render_investigation_trace(selected)
+
+    left, right = st.columns([1.15, 0.85])
     with left:
+        render_section_header("Case & Evidence", "Auditable support")
         render_case_detail(selected)
-        render_section_header("Investigation Trace", "Runtime decisions")
-        render_investigation_trace(selected)
         render_section_header("Evidence Timeline", "Supporting evidence")
         render_evidence_timeline(selected)
+
     with right:
-        st.markdown(f'''<div class="ra-classification-panel"><div class="ra-classification-panel__label">Investigator classification</div><div>{status_badge(selected.status)}</div><div class="ra-classification-panel__title">{format_status(selected.status)}</div><div class="ra-classification-panel__copy">{selected.evidence_summary}</div></div>''', unsafe_allow_html=True)
+        render_section_header("Decision", "Finance-safe outcome")
+        st.markdown(
+            f'''
+            <div class="ra-classification-panel">
+              <div class="ra-classification-panel__label">Investigator classification</div>
+              <div>{status_badge(selected.status)}</div>
+              <div class="ra-classification-panel__title">{format_status(selected.status)}</div>
+              <div class="ra-classification-panel__copy">{selected.evidence_summary}</div>
+            </div>
+            ''',
+            unsafe_allow_html=True,
+        )
         render_section_header("Recommended Human Action", "Review guidance")
         render_action_panel("Finance next step", selected.recommended_action)
