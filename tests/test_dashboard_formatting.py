@@ -32,24 +32,40 @@ def test_flow_map_visualization_uses_case_data_and_workflow_lanes():
     assert "Suspected leakage" in html
 
 
-def test_animated_agent_graph_highlights_executed_evidence_path():
+def test_animated_agent_graph_replays_executed_evidence_path():
     result = run_q3_golden_investigation()
     brightfarm = result.case_by_customer("CUST-BRIGHTFARM")
     summit = result.case_by_customer("CUST-SUMMIT")
 
-    conflict_html = build_agent_graph_html(brightfarm)
-    blocked_html = build_agent_graph_html(summit)
+    conflict_html = build_agent_graph_html(brightfarm, replay_token=7)
+    blocked_html = build_agent_graph_html(summit, replay_token=8)
 
-    assert "LIVE INVESTIGATION GRAPH" in conflict_html
+    assert "LIVE AGENT REPLAY" in conflict_html
     assert "Approval document" in conflict_html
     assert "Evidence conflict" in conflict_html
     assert "@keyframes raSignal" in conflict_html
+    assert "@keyframes raEvidenceFly" in conflict_html
+    assert "@keyframes raVerdictReveal" in conflict_html
     assert 'data-node="approval"' in conflict_html
     assert 'data-node="conflict"' in conflict_html
-    assert "moving signal" in conflict_html.lower()
+    assert 'data-replay="7"' in conflict_html
+    assert "Evidence entering decision context" in conflict_html
+    assert "Auditable decision context" in conflict_html
+    assert "not hidden chain-of-thought" in conflict_html
     assert "Insufficient data" in blocked_html
     assert 'data-node="usage"' in blocked_html
     assert "Human review remains final authority" in blocked_html
+
+
+def test_flow_map_view_exposes_replay_control():
+    source = (pathlib.Path(__file__).resolve().parents[1] / "app" / "views" / "flow_map.py").read_text(
+        encoding="utf-8"
+    )
+
+    assert "▶ Replay Investigation" in source
+    assert 'st.session_state["agent_replay_token"]' in source
+    assert "replay_token=st.session_state" in source
+    assert "does not expose hidden chain-of-thought" in source
 
 
 def test_dashboard_tabs_target_current_streamlit_dom():
