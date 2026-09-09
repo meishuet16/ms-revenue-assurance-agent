@@ -31,13 +31,12 @@ def render() -> None:
             st.session_state["agent_replay_token"] += 1
     with note_col:
         st.markdown(
-            '<div class="ra-note"><strong>How to read this:</strong> bright nodes were visited, dim branches were not taken, and evidence cards show what entered the auditable decision context.</div>',
+            '<div class="ra-note"><strong>How to read this:</strong> bright nodes were visited, dim branches were not taken, and evidence cards show what entered the auditable decision context. The replay does not expose hidden chain-of-thought.</div>',
             unsafe_allow_html=True,
         )
 
-    replay_token = st.session_state["agent_replay_token"]
-    render_replay_status(selected, replay_token=replay_token)
-    render_agent_graph(selected, replay_token=replay_token)
+    render_replay_status(selected, replay_token=st.session_state["agent_replay_token"])
+    render_agent_graph(selected, replay_token=st.session_state["agent_replay_token"])
 
     st.markdown(
         f"""
