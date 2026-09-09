@@ -10,9 +10,9 @@ from app.services.snowflake_service import fetch_cases
 
 def render() -> None:
     render_section_header(
-        "Agent Investigation Graph",
-        "Replayable decision path",
-        "Replay the executed branch from variance signal to evidence checks and the final human-review verdict.",
+        "Replay the Investigation",
+        "04 · Agent decision path",
+        "Watch the executed branch from the original variance signal through the evidence checks to the final finance handoff.",
     )
     cases = fetch_cases()
     selected = st.selectbox(
@@ -30,15 +30,29 @@ def render() -> None:
         if st.button("▶ Replay Investigation", use_container_width=True, type="primary"):
             st.session_state["agent_replay_token"] += 1
     with note_col:
-        st.caption("Replays auditable runtime state: visited checks, evidence, branch changes, and final verdict. It does not expose hidden chain-of-thought.")
+        st.markdown(
+            '<div class="ra-note"><strong>How to read this:</strong> bright nodes were visited, dim branches were not taken, and evidence cards show what entered the auditable decision context.</div>',
+            unsafe_allow_html=True,
+        )
 
     replay_token = st.session_state["agent_replay_token"]
     render_replay_status(selected, replay_token=replay_token)
     render_agent_graph(selected, replay_token=replay_token)
 
+    st.markdown(
+        f"""
+        <div class="ra-safety-panel">
+          <strong>Investigation complete → Human review required</strong><br>
+          Recommended next step: {selected.recommended_action}<br>
+          No financial action has been executed.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     render_section_header(
         "Portfolio Outcomes",
         "All Q3 cases",
-        "The focused replay explains one adaptive path; the cards below keep the complete review queue visible.",
+        "The replay above explains one adaptive path. The portfolio below keeps every Q3 outcome visible for comparison.",
     )
     render_flow_map(cases)
