@@ -27,10 +27,12 @@ st.set_page_config(page_title="Revenue Assurance Agent", layout="wide")
 apply_theme()
 render_hero(
     "Revenue Assurance Investigation Agent",
-    "Evidence-backed Q3 billing integrity review for finance triage.",
+    "From billing variance to evidence-backed finance review — with the financial decision kept human.",
 )
 
-tab_summary, tab_queue, tab_evidence, tab_flow = st.tabs(["Summary", "Case Queue", "Evidence Trail", "Flow Map"])
+tab_summary, tab_queue, tab_evidence, tab_flow = st.tabs(
+    ["01 Overview", "02 Investigate", "03 Evidence", "04 Replay"]
+)
 with tab_summary:
     summary.render()
 with tab_queue:
