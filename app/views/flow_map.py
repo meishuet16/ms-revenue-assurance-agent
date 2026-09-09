@@ -3,6 +3,7 @@ from __future__ import annotations
 import streamlit as st
 
 from app.components.flow_map import render_agent_graph, render_flow_map
+from app.components.replay_status import render_replay_status
 from app.components.section import render_section_header
 from app.services.snowflake_service import fetch_cases
 
@@ -31,7 +32,9 @@ def render() -> None:
     with note_col:
         st.caption("Replays auditable runtime state: visited checks, evidence, branch changes, and final verdict. It does not expose hidden chain-of-thought.")
 
-    render_agent_graph(selected, replay_token=st.session_state["agent_replay_token"])
+    replay_token = st.session_state["agent_replay_token"]
+    render_replay_status(selected, replay_token=replay_token)
+    render_agent_graph(selected, replay_token=replay_token)
 
     render_section_header(
         "Portfolio Outcomes",
