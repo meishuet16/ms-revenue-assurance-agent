@@ -20,38 +20,51 @@ def _submit_review_action(case_id: str, review_status: str, reviewed_by: str, co
 
 def render() -> None:
     render_section_header(
-        "Case Queue",
-        "Finance workbench",
-        "Prioritize findings, inspect evidence summaries, and record human review state.",
+        "Investigate a Case",
+        "02 · Finance workbench",
+        "Choose a finding, understand why it was flagged, then record the human review state. The queue is the starting point — not the conclusion.",
     )
     cases = fetch_cases()
-    left, right = st.columns([1.35, 1])
+    left, right = st.columns([1.25, 1])
     with left:
-        st.markdown('<div class="ra-panel-label">Finance review queue</div>', unsafe_allow_html=True)
+        st.markdown('<div class="ra-panel-label">Cases needing review</div>', unsafe_allow_html=True)
         render_case_list(cases)
-        with st.expander("Audit table", expanded=False):
+        with st.expander("Open audit table", expanded=False):
             render_case_table(cases)
     with right:
-        selected = st.selectbox("Focused case", cases, format_func=lambda case: f"{case.customer_name} - {case.status}")
+        selected = st.selectbox(
+            "Focused case",
+            cases,
+            format_func=lambda case: f"{case.customer_name} · {case.status.replace('_', ' ').title()}",
+        )
+        st.markdown(
+            f'<div class="ra-note"><strong>Why this case is here:</strong> {selected.evidence_summary}<br><strong>Queue direction:</strong> {selected.queue_action}</div>',
+            unsafe_allow_html=True,
+        )
         render_case_detail(selected)
-        render_section_header("Review Action", "Human decision")
+        render_section_header(
+            "Human Review",
+            "Decision boundary",
+            "The system has prepared the finding. Any financial consequence still requires a reviewer.",
+        )
         st.markdown(
             """
             <div class="ra-safety-panel">
-              Review actions only update investigation review state. They do not create invoices,
-              send emails, update ledgers, trigger payments, or change customer balances.
+              <strong>No financial action is executed here.</strong><br>
+              Review controls only update investigation review state — never invoices, ledgers, payments,
+              customer balances, or outbound communication.
             </div>
             """,
             unsafe_allow_html=True,
         )
         reviewed_by = st.text_input("Reviewer", value="finance.reviewer@example.com")
-        comment = st.text_area("Review comment", value="Offline review note.")
+        comment = st.text_area("Review note", value="Offline review note.")
         if "review_action_message" in st.session_state:
             st.success(st.session_state["review_action_message"])
         cols = st.columns(3)
-        if cols[0].button("Accept finding"):
+        if cols[0].button("Accept for review", use_container_width=True, type="primary"):
             _submit_review_action(selected.case_id or "", "accepted_for_billing_review", reviewed_by, comment)
-        if cols[1].button("Dismiss"):
+        if cols[1].button("Dismiss", use_container_width=True):
             _submit_review_action(selected.case_id or "", "dismissed", reviewed_by, comment)
-        if cols[2].button("Assign"):
+        if cols[2].button("Assign", use_container_width=True):
             _submit_review_action(selected.case_id or "", "assigned", reviewed_by, comment)
