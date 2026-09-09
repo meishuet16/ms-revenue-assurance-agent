@@ -14,30 +14,48 @@ from app.services.snowflake_service import fetch_cases
 
 def render() -> None:
     render_section_header(
-        "Evidence Trail",
-        "Investigation record",
-        "See what the investigator checked, why its path changed, the evidence it used, and where human review begins.",
+        "Evidence & Decision",
+        "03 · Investigation record",
+        "Follow the case in the same order a reviewer would: what was checked, what the evidence means, then what still requires a human decision.",
     )
     cases = fetch_cases()
-    selected = st.selectbox("Case", cases, format_func=lambda case: f"{case.customer_name} - {case.case_id}")
+    selected = st.selectbox(
+        "Focused evidence record",
+        cases,
+        format_func=lambda case: f"{case.customer_name} · {case.case_id}",
+    )
+
+    st.markdown(
+        """
+        <div class="ra-status-strip">
+          <div><strong>1 · Evidence</strong><br>Pricing, usage, invoice and approval records</div>
+          <div><strong>2 · Interpretation</strong><br>Executed checks and classification</div>
+          <div><strong>3 · Human decision</strong><br>Finance reviews the recommended next step</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     render_evidence_summary(selected)
 
-    render_section_header("Investigation Console", "Executed decision path")
+    render_section_header(
+        "What the Investigator Checked",
+        "Executed path",
+        "This is the auditable runtime trace: observable checks and branch decisions, not hidden chain-of-thought.",
+    )
     render_investigation_trace(selected)
 
-    left, right = st.columns([1.15, 0.85])
+    left, right = st.columns([1.12, 0.88])
     with left:
-        render_section_header("Case & Evidence", "Auditable support")
+        render_section_header("Supporting Evidence", "What we know")
         render_case_detail(selected)
-        render_section_header("Evidence Timeline", "Supporting evidence")
         render_evidence_timeline(selected)
 
     with right:
-        render_section_header("Decision", "Finance-safe outcome")
+        render_section_header("What It Means", "Investigator outcome")
         st.markdown(
             f'''
             <div class="ra-classification-panel">
-              <div class="ra-classification-panel__label">Investigator classification</div>
+              <div class="ra-classification-panel__label">Evidence-backed classification</div>
               <div>{status_badge(selected.status)}</div>
               <div class="ra-classification-panel__title">{format_status(selected.status)}</div>
               <div class="ra-classification-panel__copy">{selected.evidence_summary}</div>
@@ -45,5 +63,9 @@ def render() -> None:
             ''',
             unsafe_allow_html=True,
         )
-        render_section_header("Recommended Human Action", "Review guidance")
-        render_action_panel("Finance next step", selected.recommended_action)
+        render_section_header("What Finance Does Next", "Human authority")
+        render_action_panel("Recommended next step", selected.recommended_action)
+        st.markdown(
+            '<div class="ra-safety-panel"><strong>Decision boundary:</strong> the investigation ends here. No invoice, ledger, payment, balance, or customer action has been executed.</div>',
+            unsafe_allow_html=True,
+        )
