@@ -10,8 +10,8 @@ from app.services.snowflake_service import fetch_cases
 def render() -> None:
     render_section_header(
         "Agent Investigation Graph",
-        "Animated decision path",
-        "Watch the executed branch light up from variance signal to evidence checks and the final human-review verdict.",
+        "Replayable decision path",
+        "Replay the executed branch from variance signal to evidence checks and the final human-review verdict.",
     )
     cases = fetch_cases()
     selected = st.selectbox(
@@ -20,11 +20,22 @@ def render() -> None:
         format_func=lambda case: f"{case.customer_name} · {case.status.replace('_', ' ').title()}",
         key="flow_map_selected_case",
     )
-    render_agent_graph(selected)
+
+    if "agent_replay_token" not in st.session_state:
+        st.session_state["agent_replay_token"] = 1
+
+    replay_col, note_col = st.columns([0.32, 0.68])
+    with replay_col:
+        if st.button("▶ Replay Investigation", use_container_width=True, type="primary"):
+            st.session_state["agent_replay_token"] += 1
+    with note_col:
+        st.caption("Replays auditable runtime state: visited checks, evidence, branch changes, and final verdict. It does not expose hidden chain-of-thought.")
+
+    render_agent_graph(selected, replay_token=st.session_state["agent_replay_token"])
 
     render_section_header(
         "Portfolio Outcomes",
         "All Q3 cases",
-        "The focused graph explains one adaptive path; the cards below keep the complete review queue visible.",
+        "The focused replay explains one adaptive path; the cards below keep the complete review queue visible.",
     )
     render_flow_map(cases)
